@@ -1,4 +1,15 @@
-/* !script whith defer! */
+/* script whith defer */
+
+/**
+ * Добавляет масштабирование елементу
+ * @param {object} options. Содержит свойства:
+ * {html element} scaleMinusEl - кнопка для увелениея масштаба
+ * {html element} scalePlusEl - уменьшения
+ * {html element} scaleNEl - отображения текущего масштаба
+ * {html element} object - маштабируемый объект
+ * {number} step - шаг масштабирования
+ * {number} showTime - время отображения текущего масштаба
+ */
 var Scalling;
 (function() {
    Scaling = function(options) {
@@ -8,6 +19,7 @@ var Scalling;
    
    Scaling.prototype.initEvents = function(options) {
       var self = this;
+      
       self.scaleMinusEl.addEventListener('click', function() {
          self.scale -= self.step;
          self.updateScale();
@@ -18,6 +30,7 @@ var Scalling;
          self.updateScale();
       });
       
+      //Масштабирование прокруткой колесика мыши (при нажатом ctrl)
       document.addEventListener('wheel', function(event) {
          if (event.ctrlKey) {
             event.preventDefault();
@@ -38,6 +51,7 @@ var Scalling;
       return this;
    }
    
+   //Отображает текущее масштабирование
    Scaling.prototype.showScale = function() {
       var self = this;
       self.showScaleNEl();
@@ -48,13 +62,15 @@ var Scalling;
       
       return self;
    }
-  
+   
+   //Показывает текущее масштабирование
    Scaling.prototype.showScaleNEl = function() {
       this.scaleNEl.style.opacity = 1;
       
       return this;
    }
    
+   //Скрывает текущее масштабирование
    Scaling.prototype.hideScaleNEl = function() {
       this.scaleNEl.style.opacity = 0;
       
