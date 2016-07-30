@@ -148,11 +148,11 @@
 } 
 
 .game__tile-4 {
-   background: #eddfc0;
+   background: rgb(240,220,190);
 }
 
 .game__tile-8 {
-   background: #f4b17a;
+   background: rgb(240,180,120);
 }
 
 /* PHONE STYLE */
