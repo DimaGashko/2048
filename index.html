@@ -1,13 +1,21 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
    <title>2048</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link type="text/css" rel="stylesheet" href="css.css">
+   
+   <script src="js/scaling.js" defer></script>
 </head>
 <body>
-  
+   <div id="scale" class="scale">
+      <div class="scale__minus">&ndash;</div>
+      <div class="scale__plus">+</div>
+      <div class="scale__n">100%</div>
+   </div>
+   
+   <!-- phone start -->
    <div id="phone" class="phone">
       <div class="phone__display">
          
@@ -76,6 +84,7 @@
          <div class="phone__main phone__round_element"></div>
       </div>
    </div>
+   <!-- phone end -->
    
 </body>
 </html>
