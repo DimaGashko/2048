@@ -1,4 +1,4 @@
-html , body{
+﻿html , body{
    margin: 0;
    height: 100%;
    width: 100%;
@@ -305,6 +305,7 @@ html , body{
    left: 0; bottom: 0;
    margin: auto;
    z-index: 20;
+   display: none;
    opacity: 0;
    transition: opacity .1s;
 }

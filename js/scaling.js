@@ -1,14 +1,14 @@
-/* script whith defer */
+п»ї/* script whith defer */
 
 /**
- * Добавляет масштабирование елементу
- * @param {object} options. Содержит свойства:
- * {html element} scaleMinusEl - кнопка для увелениея масштаба
- * {html element} scalePlusEl - уменьшения
- * {html element} scaleNEl - отображения текущего масштаба
- * {html element} object - маштабируемый объект
- * {number} step - шаг масштабирования
- * {number} showTime - время отображения текущего масштаба
+ * Р”РѕР±Р°РІР»СЏРµС‚ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ РµР»РµРјРµРЅС‚Сѓ
+ * @param {object} options. РЎРѕРґРµСЂР¶РёС‚ СЃРІРѕР№СЃС‚РІР°:
+ * {html element} scaleMinusEl - РєРЅРѕРїРєР° РґР»СЏ СѓРІРµР»РµРЅРёРµСЏ РјР°СЃС€С‚Р°Р±Р°
+ * {html element} scalePlusEl - СѓРјРµРЅСЊС€РµРЅРёСЏ
+ * {html element} scaleNEl - РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ РјР°СЃС€С‚Р°Р±Р°
+ * {html element} object - РјР°С€С‚Р°Р±РёСЂСѓРµРјС‹Р№ РѕР±СЉРµРєС‚
+ * {number} step - С€Р°Рі РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ
+ * {number} showTime - РІСЂРµРјСЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ РјР°СЃС€С‚Р°Р±Р°
  */
 var Scalling;
 (function() {
@@ -30,7 +30,7 @@ var Scalling;
          self.updateScale();
       });
       
-      //Масштабирование прокруткой колесика мыши (при нажатом ctrl)
+      //РњР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ РїСЂРѕРєСЂСѓС‚РєРѕР№ РєРѕР»РµСЃРёРєР° РјС‹С€Рё (РїСЂРё РЅР°Р¶Р°С‚РѕРј ctrl)
       document.addEventListener('wheel', function(event) {
          if (event.ctrlKey) {
             event.preventDefault();
@@ -51,7 +51,7 @@ var Scalling;
       return this;
    }
    
-   //Отображает текущее масштабирование
+   //РћС‚РѕР±СЂР°Р¶Р°РµС‚ С‚РµРєСѓС‰РµРµ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ
    Scaling.prototype.showScale = function() {
       var self = this;
       self.showScaleNEl();
@@ -63,17 +63,24 @@ var Scalling;
       return self;
    }
    
-   //Показывает текущее масштабирование
+   //РџРѕРєР°Р·С‹РІР°РµС‚ С‚РµРєСѓС‰РµРµ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ
    Scaling.prototype.showScaleNEl = function() {
-      this.scaleNEl.style.opacity = 1;
+      var self = this;
+      self.scaleNEl.style.display = 'block';
+      setTimeout(function() {
+         self.scaleNEl.style.opacity = 1;
+      }, 50);
       
       return this;
    }
    
-   //Скрывает текущее масштабирование
+   //РЎРєСЂС‹РІР°РµС‚ С‚РµРєСѓС‰РµРµ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёРµ
    Scaling.prototype.hideScaleNEl = function() {
+      var self = this;
       this.scaleNEl.style.opacity = 0;
-      
+      setTimeout(function() {
+         self.scaleNEl.style.display = 'none';
+      }, 50);
       return this;
    }
   
