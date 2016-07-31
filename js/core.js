@@ -1,13 +1,8 @@
 ﻿var _2048 = new Game2048({
-   nBlocksStart: 2,
+   nTilesStart: 2,
    size: 4, 
 })
 
-for(var i = 0; i < _2048.allTiles.length; i++) {
-   console.log(_2048.allTiles[i]);
+for(var i = 0; i < _2048.consoleGame.allTiles.length; i++) {
+   console.log(_2048.consoleGame.allTiles[i]);
 }
-
-document.addEventListener('swipe', function(event) {
-   console.log('swipe:', event.direction);
-});
-

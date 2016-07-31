@@ -1,7 +1,7 @@
 ﻿/** 
  * Конструктор плиток с числами для игры 2048
  *
- * @param {object} options. Настройки игры. Содержит свойства: 
+ * @param {object} options. Настройки плитки. Содержит свойства: 
  * {number} x, y, n - соответствено координаты х, y и значение
  */
 var Tile;
@@ -44,6 +44,14 @@ var Tile;
    
 }());
 
+/** 
+ * Возвращяет html ячейки для игры 2048
+ */
+function getCellHTML (size, borderWidth) {
+   return '<div class="game__cell" style="width: ' +
+      size + 'px; height: ' + size + 'px; border-width: ' 
+      + borderWidth + 'px"></div>';
+}
 
 /** 
  * Конструктор рандомных чисел

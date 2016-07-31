@@ -79,7 +79,7 @@
    top: 42px; right: 5px;
 }
 
-.game__score, .game__score-best {
+.game__score, .game__best {
    display: inline-block;
    text-align: center;
    margin-left: 1px;
@@ -90,7 +90,7 @@
    font-size: 14px;
    border-radius: 5px;
 }
-.game__score-name, .game__score-best-name {
+.game__score-name, .game__best-name {
    color: #EEE4DA;
    font-size: 12px;
 }

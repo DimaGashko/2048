@@ -43,13 +43,23 @@ var Scalling;
    }
    
    Scaling.prototype.updateScale = function() {
-      this.scale = (this.scale < 0) ? this.scale = 0 : this.scale;
+      this.corectScale();
       this.scaleNEl.innerHTML = this.scale + '%';
       this.object.style.transform = 'scale(' + this.scale / 100 + ')';
       this.showScale();
       
       return this;
    }
+   
+    Scaling.prototype.corectScale = function() {
+      if (this.scale < 0) {
+         this.scale = 0;
+      } else if (this.scale > 101 - this.step && this.scale < 99 + this.step) {
+         this.scale = 100;
+      } 
+      
+      return this;
+    }
    
    //Отображает текущее масштабирование
    Scaling.prototype.showScale = function() {
