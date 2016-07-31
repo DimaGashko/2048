@@ -139,7 +139,7 @@
    width: 48px;
    height: 48px;
    line-height: 48px;
-   background: green;
+   background: rgb(250,30,30);
    text-align: center;
    top: 2px; left: 2px;
    color: #796a5f;
@@ -147,13 +147,17 @@
    font-size: 20px;
 } 
 
-.game__tile-4 {
-   background: rgb(240,220,190);
-}
-
-.game__tile-8 {
-   background: rgb(240,180,120);
-}
+.game__tile-2 { background: rgb(240,230,220) }
+.game__tile-4 { background: rgb(240,220,190) }
+.game__tile-8 { background: rgb(240,180,120) }
+.game__tile-16 { background: rgb(250,150,090) }
+.game__tile-32 { background: rgb(250,120,100) }
+.game__tile-64 { background: rgb(240,095,060) }
+.game__tile-128 { background: rgb(240,210,115) }
+.game__tile-256 { background: rgb(240,200,100) }
+.game__tile-512 { background: rgb(240,200,080) }
+.game__tile-1024 { background: rgb(240,200,060) }
+.game__tile-2048 { background: rgb(240,190,045) }
 
 /* PHONE STYLE */
 

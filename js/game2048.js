@@ -2,7 +2,7 @@
  * Конструктор игры 2048 (визуальная часть)
  *
  * @param {object} options. Настройки игры. Содержит свойства: 
- * {number} nTilesStart - начальное количество блоков
+ * {number} nConsoleTilesStart - начальное количество блоков
  * {number} size - размер игрогого поля
  */
 
@@ -37,18 +37,21 @@ var Game2048;
       
       metrics.border = this.el.border.clientWidth;
       metrics.cellBorder = this.getCellBorder();
-      metrics.widthBorder = metrics.border / this.size - 
+      metrics.widthCell = metrics.border / this.size - 
+         metrics.cellBorder * 2;
+      metrics.tileSize = metrics.widthCell + 
          metrics.cellBorder * 2;
    }
    
    Game2048.prototype.create = function() {
       this.createCells();
+      this.updateTiles();
       
       return this;
    }
    
    Game2048.prototype.createCells = function() {
-      var size = this.metrics.widthBorder;
+      var size = this.metrics.widthCell;
       var border = this.metrics.cellBorder;
       
       for (var i = 0, html = ''; i < this.size * this.size; i++) {
@@ -75,12 +78,16 @@ var Game2048;
          var keyCode = event.keyCode;
          if (keyCode === 37) {
             self.consoleGame.moveLeft();
+            self.updateTiles();
          } else if (keyCode === 38) {
             self.consoleGame.moveTop();
+            self.updateTiles();
          } else if (keyCode === 39) {
             self.consoleGame.moveRight();
+            self.updateTiles();
          } else if (keyCode === 40) {
             self.consoleGame.moveBottom();
+            self.updateTiles();
          }
       });
       
@@ -96,7 +103,31 @@ var Game2048;
          } else if (direction === 'bottom') {
             self.consoleGame.moveBottom();
          }
+         
+         self.updateTiles();
       });
+   }
+   
+   Game2048.prototype.updateTiles = function() {
+      var consoleTiles = this.consoleGame.allConsoleTiles;
+      var tileW = this.metrics.widthCell;
+      var cellB = this.metrics.cellBorder;
+      
+      for (var i = 0; i < consoleTiles.length; i++) {
+         options = {
+            left: (consoleTiles[i].x - 1) * (tileW + cellB * 2) + cellB ,
+            top: (consoleTiles[i].y - 1) * (tileW  + cellB * 2) + cellB,
+            n: consoleTiles[i].n,
+         }
+      
+         if (this.allTiles[consoleTiles[i].index] !== undefined) {
+            this.allTiles[consoleTiles[i].index].update(options);
+         } else {
+            options.parent = this.el.border;
+            options.size = tileW;
+            this.allTiles[consoleTiles[i].index] = new Tile(options)
+         }
+      }
    }
    
    Game2048.prototype.createOptions = function(options) {
@@ -105,6 +136,8 @@ var Game2048;
       
       this.corectOptions();
       this.createConsoleGame();
+      
+      this.allTiles = {};
       
       return this;
    }
@@ -122,7 +155,7 @@ var Game2048;
    Game2048.prototype.createConsoleGame = function() {
       var self = this;
       self.consoleGame = new ConsoleGame2048({
-         nTilesStart: self.nTilesStart,
+         nConsoleTilesStart: self.nTilesStart,
          size: self.size, 
       })
    }
