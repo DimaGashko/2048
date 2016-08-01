@@ -17,17 +17,35 @@ var Tile;
       
       this.el = document.createElement('div');
       this.setClassName();
-      this.el.style.left = this.left + 'px';
-      this.el.style.top = this.top + 'px';
-      this.el.innerText = this.n;
       
-      this.el.style.width = this.size + 'px';
-      this.el.style.height = this.size + 'px';
-      this.el.style['line-height'] = this.size + 'px';
+      this.el.innerText = this.n;
+      this.el.style['font-size'] = 1 + 'px';
       
       this.parent.appendChild(this.el);
       
+      this.createTileDot();
+      
+      var self = this;
+      setTimeout(function() {
+         self.el.style.width = self.size + 'px';
+         self.el.style.height = self.size + 'px';
+         self.el.style['line-height'] = self.size + 'px';
+         self.el.style['font-size'] = '';
+         
+         self.el.style.left = self.left + 'px';
+         self.el.style.top = self.top + 'px';
+      });
+      
       return this;
+   }
+   
+   Tile.prototype.createTileDot = function(options) {
+      this.el.style.width = 1 + 'px';
+      this.el.style.height = 1 + 'px';
+      this.el.style['line-height'] = 1 + 'px';
+      
+      this.el.style.left = this.left + this.size / 2 + 'px';
+      this.el.style.top = this.top + this.size / 2 + 'px';
    }
    
    //options {left, top, n}

@@ -122,12 +122,17 @@ var Game2048;
       
          if (this.allTiles[consoleTiles[i].index] !== undefined) {
             this.allTiles[consoleTiles[i].index].update(options);
+            this.updateScore(options.n);
          } else {
             options.parent = this.el.border;
             options.size = tileW;
             this.allTiles[consoleTiles[i].index] = new Tile(options)
          }
       }
+   }
+   
+   Game2048.prototype.updateScore = function(plusN) {
+      this.el.score.innerText = +this.el.score.innerText + +plusN;
    }
    
    Game2048.prototype.createOptions = function(options) {

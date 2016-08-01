@@ -145,6 +145,13 @@
    color: #796a5f;
    font-weight: bold;
    font-size: 20px;
+   transition: transform .2s,
+      left .25s, 
+      top .25s,
+      width .25s,
+      height .25s,
+      line-height .25s,
+      font-size .25s;
 } 
 
 .game__tile-2 { background: rgb(240,230,220) }
