@@ -166,6 +166,16 @@
 .game__tile-1024 { background: rgb(240,200,060) }
 .game__tile-2048 { background: rgb(240,190,045) }
 
+.game__tile-start-1 {
+   left: 54px; 
+   top: 106px;
+}
+
+.game__tile-start-2 {
+   left: 158px; 
+   top: 2px;
+}
+
 /* PHONE STYLE */
 
 .phone {

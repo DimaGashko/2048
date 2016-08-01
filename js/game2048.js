@@ -122,17 +122,29 @@ var Game2048;
       
          if (this.allTiles[consoleTiles[i].index] !== undefined) {
             this.allTiles[consoleTiles[i].index].update(options);
-            this.updateScore(options.n);
+            this.updateScore(consoleTiles[i]);
          } else {
             options.parent = this.el.border;
             options.size = tileW;
             this.allTiles[consoleTiles[i].index] = new Tile(options)
          }
       }
+      
+      for (var i = 0; i < this.consoleGame.onDeleted.length; i++) {
+         this.removeTile(this.consoleGame.onDeleted[i]);
+      }
    }
    
-   Game2048.prototype.updateScore = function(plusN) {
-      this.el.score.innerText = +this.el.score.innerText + +plusN;
+   Game2048.prototype.updateScore = function(consoleTile) {
+      console.log(consoleTile)
+      if (consoleTile.merger) {
+         this.el.score.innerText = +this.el.score.innerText + +consoleTile.n;
+      }
+   }
+   
+   Game2048.prototype.removeTile = function(index) {
+      this.el.border.removeChild(this.allTiles[index].el);
+      delete this.allTiles[index];
    }
    
    Game2048.prototype.createOptions = function(options) {

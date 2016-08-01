@@ -115,6 +115,10 @@ var ConsoleTile;
       this.y = options.y || 1;
       this.n = options.n || 2;
       
+      //Указывает, создаваемая плитка - новая
+      //Или результат объединеня других плиток
+      this.merger = options.merger || false;
+      
       this.created = true;
       return this;
    }

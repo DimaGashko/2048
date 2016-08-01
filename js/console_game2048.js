@@ -13,22 +13,8 @@ var ConsoleGame2048;
          return new ConsoleGame2048(options); 
       }
    
-      this.createOptions(options);                console.time('create');
-      this.createConsoleTiles(this.nConsoleTilesStart);         console.timeEnd('create');
-   }
-   
-   ConsoleGame2048.prototype.joinIdenticalConsoleTile = function() {
-      for (var i = 0; i < this.identicalConsoleTiles.length; i++) {
-         this.removeConsoleTile(this.identicalConsoleTiles[i][0]);
-         this.identicalConsoleTiles[i][1].n = 
-            Math.pow(this.identicalConsoleTiles[i][1].n, 2);
-      }
-      
-   }
-   
-   ConsoleGame2048.prototype.removeConsoleTile = function(tile) {
-      this.allConsoleTiles.splice(tile.index, 1);
-      tile = null;
+      this.createOptions(options);   
+      this.createConsoleTiles(this.nConsoleTilesStart);
    }
    
    ConsoleGame2048.prototype.moveRight = function() {
@@ -40,56 +26,79 @@ var ConsoleGame2048;
    }
    
    ConsoleGame2048.prototype.moveTop = function() {
-      return this.move('y', this.size);
-   }
-   
-   ConsoleGame2048.prototype.moveBottom = function() {
       return this.move('y', 1);
    }
    
-   ConsoleGame2048.prototype.move = function(xOrY, startValue) {
-      this.identicalConsoleTiles = [];
+   ConsoleGame2048.prototype.moveBottom = function() {
+      return this.move('y', this.size);
+   }
+   
+   ConsoleGame2048.prototype.move = function(axis, startValue) {
+      var allTiles = this.allConsoleTiles, identical = true;
+      var otherAxis = (axis === 'x') ? 'y' : 'x';
+      var minusPos = (startValue === 1) ? -1 : 1;
+      var allIdenticalTiles = [];
       var ranks = [];
       
       for (var i = 0; i < this.size; i++) {
          ranks[i] = [];
       }
       
-      for (var i = 0; i < this.allConsoleTiles.length; i++) {
-         console.log(this.allConsoleTiles[i]);
-         ranks[this.allConsoleTiles[i][xOrY] - 1].push(this.allConsoleTiles[i]);
+      for (var i = 0; i < allTiles.length; i++) {
+         ranks[allTiles[i][otherAxis] - 1].push(allTiles[i]);
       }
       
       for (var i = 0; i < ranks.length; i++) {
          ranks[i].sort(function(a, b) {
-            return a[xOrY] - b[xOrY];
+            return a[axis] - b[axis];
          });
          
-         if (startValue === 1) {
+         if (startValue === this.size) {
             ranks[i].reverse();
          }
          
          for (var j = 0; j < ranks[i].length; j++) {
             if (ranks[i][j-1]) {
-               if (ranks[i][j].n === ranks[i][j-1].n) {
-                  if (1) {
-                     ranks[i][j][xOrY] = ranks[i][j-1][xOrY];
-                     this.identicalConsoleTiles.push([ranks[i][j], ranks[i][j-1]]);
-                  }
+               if (ranks[i][j].n === ranks[i][j-1].n && identical) {
+                  ranks[i][j][axis] = ranks[i][j-1][axis];
+                  allIdenticalTiles.push([ranks[i][j], ranks[i][j-1]]);
+                  identical = false;
                } else {
-                  ranks[i][j][xOrY] = ranks[i][j-1][xOrY] - 1;
-               }
+                  ranks[i][j][axis] = ranks[i][j-1][axis] - minusPos;
+                  identical = true;
+               } 
             } else {
-               ranks[i][j][xOrY] = startValue;
+               ranks[i][j][axis] = startValue;
             }
          }
       }
       
-      console.log(ranks);
-      this.joinIdenticalConsoleTile();
       this.createOneConsoleTile();
+      this.joinIdentical(allIdenticalTiles);
       
       return this;
+   }
+   
+   ConsoleGame2048.prototype.joinIdentical = function(identical) {
+      this.onDeleted = [];
+      for (var i = 0; i < identical.length; i++) {
+         var op = identical[i][0];
+         this.onDeleted.push(identical[i][0].index);
+         this.onDeleted.push(identical[i][1].index);
+         
+         this.createOneConsoleTile(op.x, op.y, op.n * op.n, true);
+         
+         console.log(identical[i][0].index, identical[i][1].index)
+         this.removeConsoleTile(identical[i][0]);
+         this.removeConsoleTile(identical[i][1]);
+      }
+      
+      return this;
+   }
+   
+   ConsoleGame2048.prototype.removeConsoleTile = function(tile) {
+      this.allConsoleTiles.splice(tile.index, 1);
+      tile = null;
    }
    
    ConsoleGame2048.prototype.gameOver = function() {
@@ -106,8 +115,8 @@ var ConsoleGame2048;
       return this;
    }
    
-   ConsoleGame2048.prototype.createOneConsoleTile = function() {
-      var tile = new ConsoleTile(this.getConsoleTileOptions());
+   ConsoleGame2048.prototype.createOneConsoleTile = function(x, y, n, merger) {
+      var tile = new ConsoleTile(this.getConsoleTileOptions(x, y, n, merger));
       if (tile.created) {
          this.allConsoleTiles.push(tile);
          tile.index = this.allConsoleTiles.length - 1;
@@ -115,7 +124,16 @@ var ConsoleGame2048;
       return this;
    }
    
-   ConsoleGame2048.prototype.getConsoleTileOptions = function(n) {
+   ConsoleGame2048.prototype.getConsoleTileOptions = function(x, y, n, merger) {
+      if (x && y && n) {
+         return {
+            x: x,
+            y: y,
+            n: n,
+            merger: merger || false,
+         }
+      }
+      
       var freeCoordinates = this.getFreeCoordinates();
       
       if (!freeCoordinates.length) {
@@ -165,6 +183,7 @@ var ConsoleGame2048;
       this.corectOptions();
       
       this.allConsoleTiles = [];
+      this.onDeleted = [];
       this.random = new Random();
       
       return this;
