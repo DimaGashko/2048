@@ -71,8 +71,12 @@ var Tile;
       return this;
    }
    
+   Tile.prototype.remove = function() {
+      this.parent.removeChild(this.el);
+   }
+   
    Tile.prototype.createOptions = function(options) {
-      this.parent = options.parent;
+      this.parent = options.parent || document.body;
       this.left = options.left;
       this.top = options.top;
       this.n = options.n;

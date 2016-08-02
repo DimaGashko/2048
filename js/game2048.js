@@ -44,6 +44,7 @@ var Game2048;
    }
    
    Game2048.prototype.create = function() {
+      this.setTileSpeed();
       this.createCells();
       this.updateTiles();
       
@@ -72,40 +73,57 @@ var Game2048;
    
    Game2048.prototype.initEvents = function() {
       var self = this;
-      
+      this.setTileSpeed();
       //Управление стрелками
       document.addEventListener('keyup', function(event) {
-         var keyCode = event.keyCode;
-         if (keyCode === 37) {
-            self.consoleGame.moveLeft();
-            self.updateTiles();
-         } else if (keyCode === 38) {
-            self.consoleGame.moveTop();
-            self.updateTiles();
-         } else if (keyCode === 39) {
-            self.consoleGame.moveRight();
-            self.updateTiles();
-         } else if (keyCode === 40) {
-            self.consoleGame.moveBottom();
-            self.updateTiles();
-         }
+         var direction = self.keyDirection[event.keyCode];
+         if (direction) self.move(direction);
       });
       
       //Управление свайпами
       document.addEventListener('swipe', function(event) {
-         var direction = event.direction;
-         if (direction === 'left') {
-            self.consoleGame.moveLeft();
-         } else if (direction === 'top') {
-            self.consoleGame.moveTop();
-         } else if (direction === 'right') {
-            self.consoleGame.moveRight();
-         } else if (direction === 'bottom') {
-            self.consoleGame.moveBottom();
-         }
-         
-         self.updateTiles();
+         self.move(event.direction);
       });
+      
+      return self;
+   }
+   
+   Game2048.prototype.move = function(direction) {
+      var self = this;
+      
+      if (direction === 'left') {
+         this.consoleGame.moveLeft();
+      } else if (direction === 'top') {
+         this.consoleGame.moveTop();
+      } else if (direction === 'right') {
+         this.consoleGame.moveRight();
+      } else if (direction === 'bottom') {
+         this.consoleGame.moveBottom();
+      }
+      
+      this.updateTiles();
+      
+      setTimeout(function() {
+         self.consoleGame.joinIdentical();
+         self.consoleGame.createOneConsoleTile();
+         
+         setTimeout(function(){
+            self.updateTiles()
+         });
+      }, self.tileSpeed)
+      
+      return this;
+   }
+   
+   Game2048.prototype.setTileSpeed = function() {
+      var testTile = new Tile({});
+      var transition = getComputedStyle(testTile.el).transition;
+      transition = transition.slice(transition.indexOf(' '));
+      testTile.remove();
+      
+      Game2048.prototype.tileSpeed = parseFloat(transition) * 1000;
+      
+      return this;
    }
    
    Game2048.prototype.updateTiles = function() {
@@ -175,6 +193,13 @@ var Game2048;
          nConsoleTilesStart: self.nTilesStart,
          size: self.size, 
       })
+   }
+   
+   Game2048.prototype.keyDirection = {
+      37: 'left',
+      38: 'top',
+      39: 'right',
+      40: 'bottom',
    }
    
 }());
