@@ -199,30 +199,44 @@
 }
 .game__tile-8 { 
    background: rgb(240,180,120);
+   color: #fff;
 }
 .game__tile-16 { 
    background: rgb(250,150,090);
+   color: #fff;
 }
 .game__tile-32 { 
    background: rgb(250,120,100);
+   color: #fff;
 }
 .game__tile-64 { 
    background: rgb(240,095,060);
+   color: #fff;
 }
 .game__tile-128 { 
    background: rgb(240,210,115);
+   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.2381), 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.14286);
 }
 .game__tile-256 { 
    background: rgb(240,200,100);
+   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.31746), 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
 }
 .game__tile-512 { 
    background: rgb(240,200,080);
+   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.39683), 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.2381);
 }
 .game__tile-1024 { 
    background: rgb(240,200,060);
+   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.47619), 
+      inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
 }
 .game__tile-2048 { 
    background: rgb(240,190,045);
+   box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.55556), 
+   inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
 }
 
 .game__tile-start-1 {
