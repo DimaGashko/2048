@@ -1,4 +1,6 @@
-﻿/** 
+﻿/* script whith defer */
+
+/** 
  * Конструктор плиток с числами для игры 2048
  *
  * @param {object} options. Настройки плитки. Содержит свойства: 
@@ -20,6 +22,7 @@ var Tile;
       
       this.el.innerText = this.n;
       this.el.style['font-size'] = 1 + 'px';
+      this.el.style['z-index'] = ++this.maxZIndex;
       
       this.parent.appendChild(this.el);
       
@@ -89,6 +92,8 @@ var Tile;
       base: 'game__tile',
    }
    
+   Tile.prototype.maxZIndex = 0;
+   
 }());
 
 /** 
@@ -119,26 +124,9 @@ var ConsoleTile;
       this.y = options.y || 1;
       this.n = options.n || 2;
       
-      //Указывает, создаваемая плитка - новая
-      //Или результат объединеня других плиток
-      this.merger = options.merger || false;
-      
       this.created = true;
       return this;
    }
-   
-   ConsoleTile.prototype.editeX = function(x) {
-      this.x = x;
-   }
-   
-   ConsoleTile.prototype.editeY = function(y) {
-      this.y = y;
-   }
-   
-   ConsoleTile.prototype.editeN = function(n) {
-      this.n = n;
-   }
-   
 }());
 
 /** 

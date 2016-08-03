@@ -1,4 +1,6 @@
-﻿/** 
+﻿/* script whith defer */
+
+/** 
  * Конструктор игры 2048 (консольконая часть)
  *
  * @param {object} options. Настройки игры. Содержит свойства: 
@@ -60,8 +62,8 @@ var ConsoleGame2048;
          for (var j = 0; j < ranks[i].length; j++) {
             if (ranks[i][j-1]) {
                if (ranks[i][j].n === ranks[i][j-1].n && identical) {
-                  ranks[i][j][axis] = ranks[i][j-1][axis];
                   this.allIdenticalTiles.push([ranks[i][j], ranks[i][j-1]]);
+                  ranks[i][j][axis] = ranks[i][j-1][axis];
                   identical = false;
                } else {
                   ranks[i][j][axis] = ranks[i][j-1][axis] - minusPos;
@@ -77,26 +79,29 @@ var ConsoleGame2048;
    }
    
    ConsoleGame2048.prototype.joinIdentical = function() {
-      this.onDeleted = [];
-      identical = this.allIdenticalTiles;
+      var identical = this.allIdenticalTiles;
+      this.onDeleted = []; this.onAdd = [];
+      
       for (var i = 0; i < identical.length; i++) {
-         var op = identical[i][0];
-         this.onDeleted.push(identical[i][0].index);
-         this.onDeleted.push(identical[i][1].index);
+         var p = identical[i][1];
+         var newTile = this.createOneConsoleTile(p.x, p.y, p.n * 2);
+         newTile.merger = true;
+         this.onAdd.push(newTile);
          
-         this.createOneConsoleTile(op.x, op.y, op.n * op.n, true);
-         
-         console.log(identical[i][0].index, identical[i][1].index)
-         this.removeConsoleTile(identical[i][0]);
-         this.removeConsoleTile(identical[i][1]);
+         this.onDeleted.push(identical[i][0].index, p.index);
+         this.removeConsoleTile(identical[i][0], p);
       }
       
       return this;
    }
    
-   ConsoleGame2048.prototype.removeConsoleTile = function(tile) {
-      this.allConsoleTiles.splice(tile.index, 1);
-      tile = null;
+   ConsoleGame2048.prototype.removeConsoleTile = function() {
+      for (var i = 0; i < arguments.length; i++) {
+         this.allConsoleTiles.splice(arguments[i].index, 1);
+         arguments[i] = null;
+      }
+      
+      return this;
    }
    
    ConsoleGame2048.prototype.gameOver = function() {
@@ -113,22 +118,22 @@ var ConsoleGame2048;
       return this;
    }
    
-   ConsoleGame2048.prototype.createOneConsoleTile = function(x, y, n, merger) {
-      var tile = new ConsoleTile(this.getConsoleTileOptions(x, y, n, merger));
+   ConsoleGame2048.prototype.createOneConsoleTile = function(x, y, n) {
+      var tile = new ConsoleTile(this.getConsoleTileOptions(x, y, n));
       if (tile.created) {
          this.allConsoleTiles.push(tile);
          tile.index = this.tileLastIndex++;
+         return tile;
       }
       return this;
    }
    
-   ConsoleGame2048.prototype.getConsoleTileOptions = function(x, y, n, merger) {
+   ConsoleGame2048.prototype.getConsoleTileOptions = function(x, y, n) {
       if (x && y && n) {
          return {
             x: x,
             y: y,
             n: n,
-            merger: merger || false,
          }
       }
       
@@ -181,7 +186,9 @@ var ConsoleGame2048;
       this.corectOptions();
       
       this.allConsoleTiles = [];
+      this.allIdenticalTiles = [];
       this.onDeleted = [];
+      this.onAdd = [];
       this.tileLastIndex = 0;
       this.random = new Random();
       

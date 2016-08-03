@@ -37,9 +37,11 @@
    cursor: pointer;
    transition: background 1s;
 }
+
 .game__set-top:hover{
    background: rgba(200, 200, 240, .3);
 }
+
 .game__set {
    position: absolute;
    top: 10px;
@@ -51,6 +53,7 @@
    border-radius: 2px;
    z-index: 1;
 }
+
 .game__set:before , .game__set:after {
    content: "";
    position: absolute;
@@ -59,9 +62,11 @@
    background: #776e65;
    border-radius: 2px;
 }
+
 .game__set:before  {
    top: 7px;
 }
+
 .game__set:after {
    top: 14px;
 }
@@ -90,9 +95,37 @@
    font-size: 14px;
    border-radius: 5px;
 }
+
 .game__score-name, .game__best-name {
    color: #EEE4DA;
    font-size: 12px;
+}
+
+.game__score {
+   position: relative;
+}
+
+.game__score-plus {
+   position: absolute;
+   left: 35%;
+   transition: color .8s,
+      top .8s;
+}
+
+.game__score-plus-start {
+   color: #776e65;
+   top: 40%;
+   opacity: 1;
+}
+
+.game__score-plus-end {
+   top: -40%;
+   color: transparent;
+}
+
+.game__score-plus-passive {
+   top: 40%;
+   color: transparent;
 }
 
 .game__border {
@@ -114,15 +147,19 @@
    transition: color .2s;
    cursor: pointer;
 }
+
 .game__undo:hover, .game__reastart:hover {
    color: black;
 }
+
 .game__undo:active, .game__reastart:active {
    color: #BBADA0;
 }
+
 .game__reastart {
    left: 5px;   
 }
+
 .game__undo {
    right: 5px;
 }
@@ -145,26 +182,48 @@
    color: #796a5f;
    font-weight: bold;
    font-size: 20px;
-   transition: transform .5s,
-      left .25s, 
-      top .25s,
-      width .25s,
-      height .25s,
-      line-height .25s,
-      font-size .25s;
+   transition: transform .2s,
+      left .2s, 
+      top .2s,
+      width .2s,
+      height .2s,
+      line-height .2s,
+      font-size .2s;
 } 
 
-.game__tile-2 { background: rgb(240,230,220) }
-.game__tile-4 { background: rgb(240,220,190) }
-.game__tile-8 { background: rgb(240,180,120) }
-.game__tile-16 { background: rgb(250,150,090) }
-.game__tile-32 { background: rgb(250,120,100) }
-.game__tile-64 { background: rgb(240,095,060) }
-.game__tile-128 { background: rgb(240,210,115) }
-.game__tile-256 { background: rgb(240,200,100) }
-.game__tile-512 { background: rgb(240,200,080) }
-.game__tile-1024 { background: rgb(240,200,060) }
-.game__tile-2048 { background: rgb(240,190,045) }
+.game__tile-2 { 
+   background: rgb(240,230,220);
+}
+.game__tile-4 { 
+   background: rgb(240,220,190); 
+}
+.game__tile-8 { 
+   background: rgb(240,180,120);
+}
+.game__tile-16 { 
+   background: rgb(250,150,090);
+}
+.game__tile-32 { 
+   background: rgb(250,120,100);
+}
+.game__tile-64 { 
+   background: rgb(240,095,060);
+}
+.game__tile-128 { 
+   background: rgb(240,210,115);
+}
+.game__tile-256 { 
+   background: rgb(240,200,100);
+}
+.game__tile-512 { 
+   background: rgb(240,200,080);
+}
+.game__tile-1024 { 
+   background: rgb(240,200,060);
+}
+.game__tile-2048 { 
+   background: rgb(240,190,045);
+}
 
 .game__tile-start-1 {
    left: 54px; 
@@ -297,9 +356,11 @@
    color: rgb(100,100,100);
    transition: color .3s;
 }
+
 .scale__minus:hover, .scale__plus:hover {
    color: rgb(200,200,200);
 }
+
 .scale__minus:active, .scale__plus:active {
    color: rgb(250,250,250);
 }

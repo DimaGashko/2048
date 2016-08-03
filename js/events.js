@@ -1,4 +1,6 @@
-﻿/**
+﻿/* script whith defer */
+
+/**
  * Создание события swipe
  *
  * В свойстве event.direction
