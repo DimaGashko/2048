@@ -36,10 +36,13 @@ var ConsoleGame2048;
    }
    
    ConsoleGame2048.prototype.move = function(axis, startValue) {
-      var allTiles = this.allConsoleTiles, identical = true;
+      var allTiles = this.allConsoleTiles;
       var otherAxis = (axis === 'x') ? 'y' : 'x';
       var minusPos = (startValue === 1) ? -1 : 1;
       this.allIdenticalTiles = [];
+      var identical = true;
+      var permissionEdit = false;
+      var axisStart;
       var ranks = [];
       
       for (var i = 0; i < this.size; i++) {
@@ -60,10 +63,11 @@ var ConsoleGame2048;
          }
          
          for (var j = 0; j < ranks[i].length; j++) {
+            axisStart = ranks[i][j][axis];
             if (ranks[i][j-1]) {
                if (ranks[i][j].n === ranks[i][j-1].n && identical) {
-                  this.allIdenticalTiles.push([ranks[i][j], ranks[i][j-1]]);
                   ranks[i][j][axis] = ranks[i][j-1][axis];
+                  this.allIdenticalTiles.push([ranks[i][j], ranks[i][j-1]]);
                   identical = false;
                } else {
                   ranks[i][j][axis] = ranks[i][j-1][axis] - minusPos;
@@ -72,6 +76,17 @@ var ConsoleGame2048;
             } else {
                ranks[i][j][axis] = startValue;
             }
+            
+            if (!permissionEdit) {
+            console.log(axisStart, ranks[i][j][axis])
+               if (axisStart !== ranks[i][j][axis]) {
+                  this.newTilePermission = true;
+                  permissionEdit = true;
+               } else {
+                  this.newTilePermission = false;
+               }
+            }
+          
          }
       }
       
@@ -97,10 +112,9 @@ var ConsoleGame2048;
    
    ConsoleGame2048.prototype.removeConsoleTile = function() {
       for (var i = 0; i < arguments.length; i++) {
-         this.allConsoleTiles.splice(arguments[i].index, 1);
+         this.allConsoleTiles.splice(arguments[i].i, 1);
          arguments[i] = null;
       }
-      
       return this;
    }
    
@@ -118,11 +132,19 @@ var ConsoleGame2048;
       return this;
    }
    
-   ConsoleGame2048.prototype.createOneConsoleTile = function(x, y, n) {
+   ConsoleGame2048.prototype.createOneConsoleTile = function g(x, y, n) {
+      if (!this.newTilePermission && !arguments.length) {
+         console.log('no Permision');
+         return;
+      } 
+   
       var tile = new ConsoleTile(this.getConsoleTileOptions(x, y, n));
       if (tile.created) {
          this.allConsoleTiles.push(tile);
-         tile.index = this.tileLastIndex++;
+         tile.index = (g.index !== undefined) ? 
+            ++g.index : g.index = 0;
+         tile.i = this.allConsoleTiles.length - 1
+            console.log(tile);
          return tile;
       }
       return this;
@@ -157,7 +179,7 @@ var ConsoleGame2048;
    }
    
    ConsoleGame2048.prototype.getFreeCoordinates = function() {
-      var coordinat = {}, free = [], notFree = this.getNotFreeCoordinates();
+      var free = [], notFree = this.getNotFreeCoordinates();
       
       for (var i = 1; i <= this.size; i++) {
          for(var j = 1; j <= this.size; j++) {
@@ -188,8 +210,9 @@ var ConsoleGame2048;
       this.allConsoleTiles = [];
       this.allIdenticalTiles = [];
       this.onDeleted = [];
-      this.onAdd = [];
-      this.tileLastIndex = 0;
+      this.onAdd = [];      
+      this.newTilePermission = true;
+      
       this.random = new Random();
       
       return this;

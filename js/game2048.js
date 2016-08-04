@@ -124,8 +124,9 @@ var Game2048;
       
       setTimeout(function() {
          self.consoleGame.joinIdentical();
+         
          var newTile = self.consoleGame.createOneConsoleTile();
-         self.consoleGame.onAdd.push(newTile);
+         if (newTile) self.consoleGame.onAdd.push(newTile);
          
          setTimeout(function(){
             self.updateNewTiles();
@@ -186,6 +187,10 @@ var Game2048;
          
          if (now.merger) scorePlus += now.n;
       }
+      
+      
+      console.log(this.consoleGame.allConsoleTiles);
+      console.log(this.allTiles);
       
       if (scorePlus) this.updateScore(scorePlus);
       

@@ -14,7 +14,7 @@ var Tile;
       this.create(options);
    }
    
-   Tile.prototype.create = function(options) {
+   Tile.prototype.create = function create(options) {
       this.createOptions(options);
       
       this.el = document.createElement('div');
@@ -22,7 +22,8 @@ var Tile;
       
       this.el.innerText = this.n;
       this.el.style['font-size'] = 1 + 'px';
-      this.el.style['z-index'] = ++this.maxZIndex;
+      this.el.style['z-index'] = (create.lastZIndex) ? 
+         ++create.lastZIndex : create.lastZIndex = 1;
       
       this.parent.appendChild(this.el);
       
@@ -91,8 +92,6 @@ var Tile;
    Tile.prototype.CLASSES = {
       base: 'game__tile',
    }
-   
-   Tile.prototype.maxZIndex = 0;
    
 }());
 
