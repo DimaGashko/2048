@@ -203,19 +203,25 @@ var Game2048;
       this.animateUpdateScore(n);
    }
    
-   Game2048.prototype.animateUpdateScore = function(n) {
+   Game2048.prototype.animateUpdateScore = function aniScore(n) {
+      if(aniScore.animate === false) return;
+      
       var self = this, scorePlus = this.el.scorePlus;
       var classBase = 'game__score-plus game__score-plus-';
       
-      scorePlus.innerText = n;
+      aniScore.animate = false;
+      
+      scorePlus.innerText = '+' + n;
       scorePlus.className = classBase + 'start';
+      
       setTimeout(function() {
          scorePlus.className = classBase + 'end';
-      }, 800);
+      }, 500);
       
       setTimeout(function() {
          scorePlus.className = classBase + 'passive';
-      }, 1500);
+         aniScore.animate = true;
+      }, 1200);
    }
    
    Game2048.prototype.removeTile = function(index) {
