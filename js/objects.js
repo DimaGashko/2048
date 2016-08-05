@@ -10,6 +10,8 @@
  */
 var Tile;
 (function() {
+   "use strict"
+
    Tile = function(options) {
       this.create(options);
    }
@@ -103,6 +105,8 @@ var Tile;
  */
 var ConsoleTile;
 (function() {
+   "use strict"
+
    ConsoleTile = function(options) {
       this.create(options);
    }

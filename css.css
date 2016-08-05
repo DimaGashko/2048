@@ -183,13 +183,13 @@
    color: #796a5f;
    font-weight: bold;
    font-size: 20px;
-   transition: transform .2s,
-      left .2s, 
-      top .2s,
-      width .2s,
-      height .2s,
-      line-height .2s,
-      font-size .2s;
+   transition: transform .15s,
+      left .15s, 
+      top .15s,
+      width .15s,
+      height .15s,
+      line-height .15s,
+      font-size .15s;
 } 
 
 .game__tile-2 { 

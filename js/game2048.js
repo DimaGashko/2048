@@ -10,6 +10,8 @@
 
 var Game2048;
 (function(){
+   "use strict"
+
    Game2048 = function(options) {
       if ( !(this instanceof Game2048) ) { 
          return new Game2048(options); 
@@ -151,7 +153,7 @@ var Game2048;
       var consoleTiles = this.consoleGame.allConsoleTiles;
       
       for (var i = 0; i < consoleTiles.length; i++) {
-         options = {
+         var options = {
             left: this.parseCoordinatInPx(consoleTiles[i].x),
             top: this.parseCoordinatInPx(consoleTiles[i].y),
             n: consoleTiles[i].n,
@@ -187,10 +189,6 @@ var Game2048;
          
          if (now.merger) scorePlus += now.n;
       }
-      
-      
-      console.log(this.consoleGame.allConsoleTiles);
-      console.log(this.allTiles);
       
       if (scorePlus) this.updateScore(scorePlus);
       

@@ -12,12 +12,14 @@
  */
 var Scalling;
 (function() {
-   Scaling = function(options) {
+   "use strict"
+
+   Scalling = function(options) {
       this.createOptions(options);
       this.initEvents();
    }
    
-   Scaling.prototype.initEvents = function(options) {
+   Scalling.prototype.initEvents = function(options) {
       var self = this;
       
       self.scaleMinusEl.addEventListener('click', function() {
@@ -42,7 +44,7 @@ var Scalling;
       return self;
    }
    
-   Scaling.prototype.updateScale = function() {
+   Scalling.prototype.updateScale = function() {
       this.corectScale();
       this.scaleNEl.innerHTML = this.scale + '%';
       this.object.style.transform = 'scale(' + this.scale / 100 + ')';
@@ -51,7 +53,7 @@ var Scalling;
       return this;
    }
    
-    Scaling.prototype.corectScale = function() {
+    Scalling.prototype.corectScale = function() {
       if (this.scale < 0) {
          this.scale = 0;
       } else if (this.scale > 101 - this.step && this.scale < 99 + this.step) {
@@ -62,7 +64,7 @@ var Scalling;
     }
    
    //Отображает текущее масштабирование
-   Scaling.prototype.showScale = function() {
+   Scalling.prototype.showScale = function() {
       var self = this;
       self.showScaleNEl();
       
@@ -74,7 +76,7 @@ var Scalling;
    }
    
    //Показывает текущее масштабирование
-   Scaling.prototype.showScaleNEl = function() {
+   Scalling.prototype.showScaleNEl = function() {
       var self = this;
       self.scaleNEl.style.display = 'block';
       setTimeout(function() {
@@ -85,7 +87,7 @@ var Scalling;
    }
    
    //Скрывает текущее масштабирование
-   Scaling.prototype.hideScaleNEl = function() {
+   Scalling.prototype.hideScaleNEl = function() {
       var self = this;
       this.scaleNEl.style.opacity = 0;
       setTimeout(function() {
@@ -94,7 +96,7 @@ var Scalling;
       return this;
    }
   
-   Scaling.prototype.createOptions = function(options) {
+   Scalling.prototype.createOptions = function(options) {
       this.scaleMinusEl = options.scaleMinusEl;
       this.scalePlusEl = options.scalePlusEl;
       this.scaleNEl = options.scaleNEl;
@@ -109,7 +111,7 @@ var Scalling;
 }());
 
 var scalingParent = document.getElementById('scale');
-var scaling = new Scaling({
+var scaling = new Scalling({
    scaleMinusEl: scalingParent.children[0],
    scalePlusEl: scalingParent.children[1],
    scaleNEl: scalingParent.children[2],
