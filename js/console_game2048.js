@@ -203,7 +203,8 @@ var ConsoleGame2048;
    }
    
    ConsoleGame2048.prototype.addTilesUndo = function() {
-      this.tilesUndo.push(JSON.stringify(this.allConsoleTiles));
+      var jsonTiles = JSON.stringify(this.allConsoleTiles);
+      this.tilesUndo.push(jsonTiles);
    }
    
    ConsoleGame2048.prototype.restart = function() {
@@ -214,7 +215,8 @@ var ConsoleGame2048;
    }
    
    ConsoleGame2048.prototype.undo = function() {
-      this.allConsoleTiles = JSON.parse(this.tilesUndo[this.tilesUndo.length-2]);
+      var lastTiles = this.tilesUndo[this.tilesUndo.length-2];
+      this.allConsoleTiles = JSON.parse(lastTiles);
       this.tilesUndo.splice(-1, 1);
    }
    

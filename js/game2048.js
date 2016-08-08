@@ -110,7 +110,7 @@ var Game2048;
    }
    
    Game2048.prototype.corectTextElUndo = function() {
-      this.el.undo.innerText = this.undoText + ' (' + this.lastUndo + ')';
+      this.el.undo.innerText = this.undoText + ' (' + this.restUndo + ')';
    }  
    
    Game2048.prototype.initEvents = function() {
@@ -134,10 +134,13 @@ var Game2048;
       
       //undo
       this.el.undo.addEventListener('click', function() {
-         if (self.lastUndo) {
+         if (self.restUndo) {
             console.log('undo')
             self.undo();
-         }            
+         }      
+         else {
+            console.log('undo ended');
+         }          
       });
       
       return self;
@@ -167,32 +170,51 @@ var Game2048;
          var newTile = self.consoleGame.createOneConsoleTile();
          if (newTile) self.consoleGame.onAdd.push(newTile);
          
-         setTimeout(function(){
+         setTimeout(function() {
             self.updateNewTiles();
-            self.consoleGame.addTilesUndo();
+            
+            if (self.restUndo && self.consoleGame.newTilePermission) {
+               self.addUndo();
+            }
+            
             self.moving = true;
          });
-      }, self.tileSpeed)
+      }, self.tileSpeed);
       
       return this;
    }
    
-   Game2048.prototype.undo = function(direction) {
-      this.lastUndo--;
-      this.corectTextElUndo();
-      this.consoleGame.undo();
-      this.clearTiles();
-      this.updateTiles();
+   Game2048.prototype.addUndo = function() {
+      this.consoleGame.addTilesUndo();
+      this.lastScores.push(this.el.score.innerHTML);
    }
    
-   Game2048.prototype.restart = function(direction) {
-      this.lastUndo = this.undoLen;
+   Game2048.prototype.undo = function() {
+      if (this.consoleGame.tilesUndo.length >= 2) {
+         this.restUndo--;
+         this.corectTextElUndo();
+         this.restScore();
+         this.consoleGame.undo();
+         this.clearTiles();
+         this.updateTiles();
+      }
+   }
+   
+   Game2048.prototype.restart = function() {
+      this.restUndo = this.undoLen;
       this.el.score.innerHTML = 0;
+      this.lastScores = [];
       
       this.clearTiles();
       this.corectTextElUndo();
       this.consoleGame.restart();
       this.updateTiles();
+   }
+   
+   Game2048.prototype.restScore = function() {
+      var lastText = this.lastScores[this.lastScores.length - 2];
+      this.el.score.innerHTML = lastText;
+      this.lastScores.splice(-1, 1);
    }
    
    Game2048.prototype.clearTiles = function() {
@@ -305,7 +327,8 @@ var Game2048;
       
       this.createConsoleGame();
       this.moving = true;
-      this.lastUndo = this.undoLen;
+      this.restUndo = this.undoLen;
+      this.lastScores = [];
       
       this.allTiles = {};
       
