@@ -4,6 +4,7 @@
  * Конструктор игры 2048 (консольконая часть)
  *
  * @param {object} options. Настройки игры. Содержит свойства: 
+ * {Game2048} Game - объект визуальной части игры
  * {number} nConsoleTilesStart - начальное количество блоков
  * {number} size - размер игрогого поля
  */
@@ -18,7 +19,7 @@ var ConsoleGame2048;
       }
    
       this.createOptions(options);   
-      this.createConsoleTiles(this.nConsoleTilesStart);
+      this.createTilesStart();
    }
    
    ConsoleGame2048.prototype.moveRight = function() {
@@ -102,8 +103,8 @@ var ConsoleGame2048;
          var p = identical[i][1];
          var newTile = this.createOneConsoleTile(p.x, p.y, p.n * 2);
          newTile.merger = true;
-         this.onAdd.push(newTile);
          
+         this.onAdd.push(newTile);
          this.onDeleted.push(identical[i][0].index, p.index);
          this.removeConsoleTile(identical[i][0], p);
       }
@@ -115,7 +116,7 @@ var ConsoleGame2048;
       for (var i = 0; i < arguments.length; i++) {
          
          for (var j = 0; j < this.allConsoleTiles.length; j++) {
-            if (arguments[i] === this.allConsoleTiles[j]) {
+            if (arguments[i].index === this.allConsoleTiles[j].index) {
                this.allConsoleTiles.splice(j, 1);
                break;
             }
@@ -130,17 +131,16 @@ var ConsoleGame2048;
       return this;
    }
    
-   ConsoleGame2048.prototype.createConsoleTiles = function(n) {
-      for (var i = 0; i < n; i++) {
+   ConsoleGame2048.prototype.createTilesStart = function() {
+      for (var i = 0; i < this.nConsoleTilesStart; i++) {
          this.createOneConsoleTile();
       }
       
       return this;
    }
-   
    ConsoleGame2048.prototype.createOneConsoleTile = function g(x, y, n) {
       if (!this.newTilePermission && !arguments.length) {
-         console.log('no Permision');
+         console.log('no move');
          return;
       } 
    
@@ -157,11 +157,7 @@ var ConsoleGame2048;
    
    ConsoleGame2048.prototype.getConsoleTileOptions = function(x, y, n) {
       if (x && y && n) {
-         return {
-            x: x,
-            y: y,
-            n: n,
-         }
+         return { x: x, y: y, n: n};
       }
       
       var freeCoordinates = this.getFreeCoordinates();
@@ -206,16 +202,34 @@ var ConsoleGame2048;
       return notFree;
    }
    
+   ConsoleGame2048.prototype.addTilesUndo = function() {
+      this.tilesUndo.push(JSON.stringify(this.allConsoleTiles));
+   }
+   
+   ConsoleGame2048.prototype.restart = function() {
+      this.allConsoleTiles = [];
+      this.tilesUndo = [];
+      this.newTilePermission = true;
+      this.createTilesStart();
+   }
+   
+   ConsoleGame2048.prototype.undo = function() {
+      this.allConsoleTiles = JSON.parse(this.tilesUndo[this.tilesUndo.length-2]);
+      this.tilesUndo.splice(-1, 1);
+   }
+   
    ConsoleGame2048.prototype.createOptions = function(options) {
       this.nConsoleTilesStart = options.nConsoleTilesStart || 2,
       this.size = options.size;
-      
+      this.undoLen = options.undoLen;
+      this.Game = options.Game;
       this.corectOptions();
       
       this.allConsoleTiles = [];
       this.allIdenticalTiles = [];
       this.onDeleted = [];
-      this.onAdd = [];      
+      this.onAdd = [];    
+      this.tilesUndo = [];
       this.newTilePermission = true;
       
       this.random = new Random();

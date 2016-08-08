@@ -33,7 +33,7 @@
    right: 5px;
    height: 19px;
    width: 25px;
-   z-index: 2;
+   z-index: 22;
    cursor: pointer;
    transition: background 1s;
 }
@@ -51,7 +51,7 @@
    margin-bottom: 14px;
    background: #776e65;
    border-radius: 2px;
-   z-index: 1;
+   z-index: 21;
 }
 
 .game__set:before , .game__set:after {
@@ -69,6 +69,17 @@
 
 .game__set:after {
    top: 14px;
+}
+
+.game__setings {
+   width: 96%;
+   height: 96%;
+   position: absolute;
+   left: 2%;
+   top: 2%;
+   z-index: 20;
+   background: rgba(255,0,0,.6);
+   display: none;
 }
 
 .game__name {
@@ -180,7 +191,7 @@
    background: rgb(250,30,30);
    text-align: center;
    top: 2px; left: 2px;
-   color: #796a5f;
+   color: #f9f6f2;
    font-weight: bold;
    font-size: 20px;
    transition: transform .15s,
@@ -194,52 +205,47 @@
 
 .game__tile-2 { 
    background: rgb(240,230,220);
+   color: #796a5f;
 }
 .game__tile-4 { 
    background: rgb(240,220,190); 
+   color: #796a5f;
 }
 .game__tile-8 { 
    background: rgb(240,180,120);
-   color: #f9f6f2;
 }
 .game__tile-16 { 
    background: rgb(250,150,090);
-   color: #f9f6f2;
 }
 .game__tile-32 { 
    background: rgb(250,120,100);
-   color: #f9f6f2;
 }
 .game__tile-64 { 
    background: rgb(240,095,060);
-   color: #f9f6f2;
 }
 .game__tile-128 { 
    background: rgb(240,210,115);
-   color: #f9f6f2;
    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.2381), 
       inset 0 0 0 1px rgba(255, 255, 255, 0.14286);
 }
 .game__tile-256 { 
    background: rgb(240,200,100);
-   color: #f9f6f2;
    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.31746), 
       inset 0 0 0 1px rgba(255, 255, 255, 0.19048);
 }
 .game__tile-512 { 
    background: rgb(240,200,080);
-   color: #f9f6f2;
    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.39683), 
       inset 0 0 0 1px rgba(255, 255, 255, 0.2381);
 }
 .game__tile-1024 { 
-   color: #f9f6f2;
+   font-size: 0.99em;
    background: rgb(240,200,060);
    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.47619), 
       inset 0 0 0 1px rgba(255, 255, 255, 0.28571);
 }
 .game__tile-2048 { 
-   color: #f9f6f2;
+   font-size: 0.99em;
    background: rgb(240,190,045);
    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.55556), 
    inset 0 0 0 1px rgba(255, 255, 255, 0.33333);
@@ -374,6 +380,7 @@
    top: 10px;
    cursor: pointer;
    color: rgb(100,100,100);
+   z-index: 9999999999;
    transition: color .3s;
 }
 

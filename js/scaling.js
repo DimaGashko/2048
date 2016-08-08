@@ -9,6 +9,7 @@
  * {html element} object - маштабируемый объект
  * {number} step - шаг масштабирования
  * {number} showTime - время отображения текущего масштаба
+ * {number} scale - начальный масштаб
  */
 var Scalling;
 (function() {
@@ -24,20 +25,17 @@ var Scalling;
       
       self.scaleMinusEl.addEventListener('click', function() {
          self.scale -= self.step;
-         self.updateScale();
       });
       
       self.scalePlusEl.addEventListener('click', function() {
          self.scale += self.step;
-         self.updateScale();
       });
       
       //Масштабирование прокруткой колесика мыши (при нажатом ctrl)
       document.addEventListener('wheel', function(event) {
-         if (event.ctrlKey) {
+         if (event.ctrlKey || event.metaKey) {
             event.preventDefault();
             self.scale += -event.deltaY / 100 * self.step;
-            self.updateScale();
          }           
       });
       
@@ -45,26 +43,30 @@ var Scalling;
    }
    
    Scalling.prototype.updateScale = function() {
-      this.corectScale();
       this.scaleNEl.innerHTML = this.scale + '%';
       this.object.style.transform = 'scale(' + this.scale / 100 + ')';
       this.showScale();
       
-      return this;
+      return scale;
    }
    
-    Scalling.prototype.corectScale = function() {
-      if (this.scale < 0) {
-         this.scale = 0;
-      } else if (this.scale > 101 - this.step && this.scale < 99 + this.step) {
-         this.scale = 100;
+    Scalling.prototype.corectScale = function(scale) {
+      if (scale < 0) {
+         scale = 0;
+      } else if (scale > 101 - this.step && scale < 99 + this.step) {
+         scale = 100;
       } 
       
-      return this;
+      return scale;
     }
    
    //Отображает текущее масштабирование
    Scalling.prototype.showScale = function() {
+      if (!this.firstShow) {
+         this.firstShow = true;
+         return this;
+      }
+   
       var self = this;
       self.showScaleNEl();
       
@@ -103,18 +105,33 @@ var Scalling;
       this.object = options.object;
       this.step = options.step || 3;
       this.showTime = options.showTime || 3000;
+      this.scaleN = 0;
       
-      this.scale = 100;
+      this.firstShow = false;
+      
+      Object.defineProperty(this, 'scale', {
+         set: function(scale) {
+            this.scaleN = this.corectScale(scale);
+            this.updateScale();
+         },
+         get: function() {
+            return this.scaleN;
+         }
+      });
+      
+      this.scale = options.scale || 100;
       
       return this;
    }
+   
+   var scalingParent = document.getElementById('scale');
+   var scaling = new Scalling({
+      scaleMinusEl: scalingParent.children[0],
+      scalePlusEl: scalingParent.children[1],
+      scaleNEl: scalingParent.children[2],
+      object: document.getElementById('phone'),
+      scale: 100,
+      step: 3,
+   });
+   
 }());
-
-var scalingParent = document.getElementById('scale');
-var scaling = new Scalling({
-   scaleMinusEl: scalingParent.children[0],
-   scalePlusEl: scalingParent.children[1],
-   scaleNEl: scalingParent.children[2],
-   object: document.getElementById('phone'),
-   step: 3,
-});

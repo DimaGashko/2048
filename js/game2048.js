@@ -17,6 +17,8 @@ var Game2048;
          return new Game2048(options); 
       }
       
+      this.options = options;
+    
       this.createOptions(options);
       this.getHTMLElements();
       this.updateMetrics();
@@ -73,32 +75,50 @@ var Game2048;
    }
    
    Game2048.prototype.create = function() {
-      this.setTileSpeed();
+      this.addOptions();
+      this.corectTextElUndo();
       this.createCells();
       this.updateTiles();
       
       return this;
    }
    
+   Game2048.prototype.addOptions = function() {
+      this.setTileSpeed();
+      this.getUndoText();
+   }
+  
+   Game2048.prototype.getUndoText = function() {
+      this.undoText = this.el.undo.innerText;
+   }
+   
    Game2048.prototype.createCells = function() {
-      var size = this.metrics.widthCell;
-      var border = this.metrics.cellBorder;
-      
       for (var i = 0, html = ''; i < this.size * this.size; i++) {
-         html += getCellHTML(size, border);
+         html += this.getCellHTML();
       }
       this.el.border.innerHTML = html;
+      this.cellsHTML = html;
       
       return this;
    }
+   
+   Game2048.prototype.getCellHTML = function() {
+   return '<div class="game__cell" style="width: ' +
+      this.metrics.widthCell + 'px; height: ' + 
+      this.metrics.widthCell + 'px; border-width: ' + 
+      this.metrics.cellBorder + 'px"></div>';
+   }
+   
+   Game2048.prototype.corectTextElUndo = function() {
+      this.el.undo.innerText = this.undoText + ' (' + this.lastUndo + ')';
+   }  
    
    Game2048.prototype.initEvents = function() {
       var self = this;
       
       //Управление стрелками
       document.addEventListener('keyup', function(event) {
-         var direction = self.keyDirection[event.keyCode];
-         if (direction) self.move(direction);
+         self.move(self.keyDirection[event.keyCode]);
       });
       
       //Управление свайпами
@@ -106,11 +126,28 @@ var Game2048;
          self.move(event.direction);
       });
       
+      //restart
+      this.el.restart.addEventListener('click', function() {
+         console.log('restart') 
+         self.restart();
+      });
+      
+      //undo
+      this.el.undo.addEventListener('click', function() {
+         if (self.lastUndo) {
+            console.log('undo')
+            self.undo();
+         }            
+      });
+      
       return self;
    }
    
    Game2048.prototype.move = function(direction) {
       var self = this;
+      
+      if (!self.moving || !direction) return;
+      self.moving = false;
       
       if (direction === 'left') {
          this.consoleGame.moveLeft();
@@ -120,7 +157,7 @@ var Game2048;
          this.consoleGame.moveRight();
       } else if (direction === 'bottom') {
          this.consoleGame.moveBottom();
-      }
+      } 
       
       this.updateTiles();
       
@@ -132,10 +169,35 @@ var Game2048;
          
          setTimeout(function(){
             self.updateNewTiles();
+            self.consoleGame.addTilesUndo();
+            self.moving = true;
          });
       }, self.tileSpeed)
       
       return this;
+   }
+   
+   Game2048.prototype.undo = function(direction) {
+      this.lastUndo--;
+      this.corectTextElUndo();
+      this.consoleGame.undo();
+      this.clearTiles();
+      this.updateTiles();
+   }
+   
+   Game2048.prototype.restart = function(direction) {
+      this.lastUndo = this.undoLen;
+      this.el.score.innerHTML = 0;
+      
+      this.clearTiles();
+      this.corectTextElUndo();
+      this.consoleGame.restart();
+      this.updateTiles();
+   }
+   
+   Game2048.prototype.clearTiles = function() {
+      this.el.border.innerHTML = this.cellsHTML;
+      this.allTiles = {};
    }
    
    Game2048.prototype.setTileSpeed = function() {
@@ -237,9 +299,13 @@ var Game2048;
    Game2048.prototype.createOptions = function(options) {
       this.nTilesStart = options.nTilesStart || 2,
       this.size = options.size;
+      this.undoLen = options.undoLen;
       
       this.corectOptions();
+      
       this.createConsoleGame();
+      this.moving = true;
+      this.lastUndo = this.undoLen;
       
       this.allTiles = {};
       
@@ -253,14 +319,17 @@ var Game2048;
          this.size = 2;
       }
       
+      this.undoLen = (this.undoLen >= 0) ? this.undoLen : 0;
+      
       return this;
    }
    
    Game2048.prototype.createConsoleGame = function() {
-      var self = this;
-      self.consoleGame = new ConsoleGame2048({
-         nConsoleTilesStart: self.nTilesStart,
-         size: self.size, 
+      this.consoleGame = new ConsoleGame2048({
+         Game: this,
+         nConsoleTilesStart: this.nTilesStart,
+         size: this.size, 
+         undoLen: this.undoLen,
       })
    }
    
