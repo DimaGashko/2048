@@ -9,11 +9,10 @@
  * {number} size - размер игрогого поля
  */
 
-var ConsoleGame2048;
 (function() {
    "use strict"
    
-   ConsoleGame2048 = function(options) {
+   window.ConsoleGame2048 = function(options) {
       if ( !(this instanceof ConsoleGame2048) ) { 
          return new ConsoleGame2048(options); 
       }
@@ -138,6 +137,7 @@ var ConsoleGame2048;
       
       return this;
    }
+   
    ConsoleGame2048.prototype.createOneConsoleTile = function g(x, y, n) {
       if (!this.newTilePermission && !arguments.length) {
          console.log('no move');
@@ -145,14 +145,28 @@ var ConsoleGame2048;
       } 
    
       var tile = new ConsoleTile(this.getConsoleTileOptions(x, y, n));
-      if (tile.created) {
-         this.allConsoleTiles.push(tile);
-         tile.index = (g.index !== undefined) ? 
-            ++g.index : g.index = 0;
-            
-         return tile;
+      this.allConsoleTiles.push(tile);
+      tile.index = (g.index !== undefined) ? 
+         ++g.index : g.index = 0;
+         
+      return tile;
+   }
+   
+   ConsoleGame2048.prototype.checkGameOver = function() {
+      if (this.allConsoleTiles.length < this.size * this.size) {
+         return false;
       }
-      return this;
+      
+      var direction = ['Top', 'Right', 'Bottom', 'Left'];
+      var copyTiles = JSON.stringify(this.allConsoleTiles);
+      
+      for (var i = 0; i < direction.length; i++) {
+         this['move' + direction[i]]();
+         this.allConsoleTiles = JSON.parse(copyTiles);
+         if (this.newTilePermission) return false;
+      }
+      
+      return true;
    }
    
    ConsoleGame2048.prototype.getConsoleTileOptions = function(x, y, n) {
@@ -163,7 +177,6 @@ var ConsoleGame2048;
       var freeCoordinates = this.getFreeCoordinates();
       
       if (!freeCoordinates.length) {
-         this.gameOver();
          return false;
       }
       
@@ -205,28 +218,33 @@ var ConsoleGame2048;
    ConsoleGame2048.prototype.addTilesUndo = function() {
       var jsonTiles = JSON.stringify(this.allConsoleTiles);
       this.tilesUndo.push(jsonTiles);
+      
+      return this;
    }
    
    ConsoleGame2048.prototype.restart = function() {
-      this.allConsoleTiles = [];
-      this.tilesUndo = [];
-      this.newTilePermission = true;
+      this.createOtherOptions();
       this.createTilesStart();
+      
+      return this;
    }
    
    ConsoleGame2048.prototype.undo = function() {
       var lastTiles = this.tilesUndo[this.tilesUndo.length-2];
       this.allConsoleTiles = JSON.parse(lastTiles);
       this.tilesUndo.splice(-1, 1);
+      
+      return this;
    }
    
    ConsoleGame2048.prototype.createOptions = function(options) {
-      this.nConsoleTilesStart = options.nConsoleTilesStart || 2,
-      this.size = options.size;
-      this.undoLen = options.undoLen;
-      this.Game = options.Game;
-      this.corectOptions();
+      this.createBaseOptions(options);
+      this.createOtherOptions();
       
+      return this;
+   }
+   
+   ConsoleGame2048.prototype.createOtherOptions = function(options) {
       this.allConsoleTiles = [];
       this.allIdenticalTiles = [];
       this.onDeleted = [];
@@ -234,6 +252,15 @@ var ConsoleGame2048;
       this.tilesUndo = [];
       this.newTilePermission = true;
       
+      return this;
+   }
+   
+   ConsoleGame2048.prototype.createBaseOptions = function(options) {
+      this.nConsoleTilesStart = options.nConsoleTilesStart || 2,
+      this.size = options.size;
+      this.undoLen = options.undoLen;
+      this.Game = options.Game;
+      this.corectOptions();
       this.random = new Random();
       
       return this;

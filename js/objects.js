@@ -107,17 +107,10 @@
       this.create(options);
    }
    
-   ConsoleTile.prototype.create = function(options) {
-      if (!options) {
-         this.created = false;
-         return;
-      };
-      
+   ConsoleTile.prototype.create = function(options) {      
       this.x = options.x || 1;
       this.y = options.y || 1;
       this.n = options.n || 2;
-      
-      this.created = true;
       
       return this;
    }

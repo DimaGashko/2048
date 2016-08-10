@@ -8,11 +8,10 @@
  * {number} size - размер игрогого поля
  */
 
-var Game2048;
 (function(){
    "use strict"
 
-   Game2048 = function(options) {
+   window.Game2048 = function(options) {
       if ( !(this instanceof Game2048) ) { 
          return new Game2048(options); 
       }
@@ -147,34 +146,41 @@ var Game2048;
    }
    
    Game2048.prototype.move = function(direction) {
-      var self = this;
+      var self = this, consoleGame = this.consoleGame;
       
-      if (!self.moving || !direction) return;
+      if (!self.moving || !direction || this.gameLosing) {
+         return;
+      }
       self.moving = false;
       
       if (direction === 'left') {
-         this.consoleGame.moveLeft();
+         consoleGame.moveLeft();
       } else if (direction === 'top') {
-         this.consoleGame.moveTop();
+         consoleGame.moveTop();
       } else if (direction === 'right') {
-         this.consoleGame.moveRight();
+         consoleGame.moveRight();
       } else if (direction === 'bottom') {
-         this.consoleGame.moveBottom();
+         consoleGame.moveBottom();
       } 
       
       this.updateTiles();
       
       setTimeout(function() {
-         self.consoleGame.joinIdentical();
+         consoleGame.joinIdentical();
          
-         var newTile = self.consoleGame.createOneConsoleTile();
-         if (newTile) self.consoleGame.onAdd.push(newTile);
+         var newTile = consoleGame.createOneConsoleTile();
+         if (newTile) consoleGame.onAdd.push(newTile);
          
          setTimeout(function() {
             self.updateNewTiles();
             
-            if (self.restUndo && self.consoleGame.newTilePermission) {
+            if (self.restUndo && consoleGame.newTilePermission) {
                self.addUndo();
+            }
+            else {
+               if (consoleGame.checkGameOver()) {
+                  self.gameOver();
+               };
             }
             
             self.moving = true;
@@ -184,13 +190,26 @@ var Game2048;
       return this;
    }
    
+   Game2048.prototype.checkMove = function() {
+      return 
+   }
+   
+   Game2048.prototype.gameOver = function() {
+      this.gameLosing = true;
+      this.consoleGame.gameOver();
+      
+      return this;
+   }
+   
    Game2048.prototype.addUndo = function() {
       this.consoleGame.addTilesUndo();
       this.lastScores.push(this.el.score.innerHTML);
+      
+      return this;
    }
    
    Game2048.prototype.undo = function() {
-      if (this.consoleGame.tilesUndo.length >= 2) {
+      if (this.checkUndo()) {
          this.restUndo--;
          this.corectTextElUndo();
          this.restScore();
@@ -198,17 +217,24 @@ var Game2048;
          this.clearTiles();
          this.updateTiles();
       }
+      
+      return this;
    }
    
    Game2048.prototype.restart = function() {
-      this.restUndo = this.undoLen;
       this.el.score.innerHTML = 0;
-      this.lastScores = [];
-      
+      this.createOtherOptions();
       this.clearTiles();
       this.corectTextElUndo();
       this.consoleGame.restart();
       this.updateTiles();
+      
+      return this;
+   }
+   
+   Game2048.prototype.checkUndo = function() {
+      return this.consoleGame.tilesUndo.length >= 2 && 
+         !this.gameLosing;
    }
    
    Game2048.prototype.restScore = function() {
@@ -319,23 +345,34 @@ var Game2048;
    }
    
    Game2048.prototype.createOptions = function(options) {
+      this.createBaseOptions(options);
+      this.createOtherOptions();
+      
+      return this;
+   }
+   
+   Game2048.prototype.createBaseOptions = function(options) {
       this.nTilesStart = options.nTilesStart || 2,
       this.size = options.size;
       this.undoLen = options.undoLen;
       
       this.corectOptions();
-      
       this.createConsoleGame();
-      this.moving = true;
-      this.restUndo = this.undoLen;
-      this.lastScores = [];
-      
-      this.allTiles = {};
       
       return this;
    }
    
-   Game2048.prototype.corectOptions = function(options) {
+   Game2048.prototype.createOtherOptions = function() {
+      this.moving = true;
+      this.restUndo = this.undoLen;
+      this.lastScores = [];
+      this.allTiles = {};
+      this.gameLosing = false; 
+      
+      return this;
+   }
+   
+   Game2048.prototype.corectOptions = function() {
       if (this.size > 20) {
          this.size = 20;
       } else if (this.size < 2) {
