@@ -16,10 +16,9 @@
          return new Game2048(options); 
       }
       
-      this.options = options;
-    
-      this.createOptions(options);
+      
       this.getHTMLElements();
+      this.createOptions(options);
       this.updateMetrics();
       this.create();
       this.initEvents();
@@ -203,7 +202,7 @@
    
    Game2048.prototype.addUndo = function() {
       this.consoleGame.addTilesUndo();
-      this.lastScores.push(this.el.score.innerHTML);
+      this.lastScores.push(this.Score.getVal());
       
       return this;
    }
@@ -222,7 +221,6 @@
    }
    
    Game2048.prototype.restart = function() {
-      this.el.score.innerHTML = 0;
       this.createOtherOptions();
       this.clearTiles();
       this.corectTextElUndo();
@@ -239,7 +237,7 @@
    
    Game2048.prototype.restScore = function() {
       var lastText = this.lastScores[this.lastScores.length - 2];
-      this.el.score.innerHTML = lastText;
+      this.Score.edit(lastText);
       this.lastScores.splice(-1, 1);
    }
    
@@ -311,30 +309,9 @@
    }
    
    Game2048.prototype.updateScore = function(n) {
-      this.el.score.innerText = +this.el.score.innerText + +n;
+      this.Score.add(n);
       
-      this.animateUpdateScore(n);
-   }
-   
-   Game2048.prototype.animateUpdateScore = function aniScore(n) {
-      if(aniScore.animate === false) return;
-      
-      var self = this, scorePlus = this.el.scorePlus;
-      var classBase = 'game__score-plus game__score-plus-';
-      
-      aniScore.animate = false;
-      
-      scorePlus.innerText = '+' + n;
-      scorePlus.className = classBase + 'start';
-      
-      setTimeout(function() {
-         scorePlus.className = classBase + 'end';
-      }, 500);
-      
-      setTimeout(function() {
-         scorePlus.className = classBase + 'passive';
-         aniScore.animate = true;
-      }, 1200);
+      return this;
    }
    
    Game2048.prototype.removeTile = function(index) {
@@ -368,8 +345,16 @@
       this.lastScores = [];
       this.allTiles = {};
       this.gameLosing = false; 
+      this.createOtherConstructors();
       
       return this;
+   }
+   
+   Game2048.prototype.createOtherConstructors = function () {
+      this.Score = new Score({
+         element: this.el.score,
+         scorePlus: this.el.scorePlus,
+      });
    }
    
    Game2048.prototype.corectOptions = function() {
