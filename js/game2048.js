@@ -145,52 +145,43 @@
    }
    
    Game2048.prototype.move = function(direction) {
-      var self = this, consoleGame = this.consoleGame;
-      
-      if (!self.moving || !direction || this.gameLosing) {
-         return;
+      if (!this.moving || !direction || this.gameLosing) {
+         return this;
       }
-      self.moving = false;
       
-      if (direction === 'left') {
-         consoleGame.moveLeft();
-      } else if (direction === 'top') {
-         consoleGame.moveTop();
-      } else if (direction === 'right') {
-         consoleGame.moveRight();
-      } else if (direction === 'bottom') {
-         consoleGame.moveBottom();
-      } 
+      this.moving = false;
       
+      this.consoleGame.moveDirection(direction);
       this.updateTiles();
       
-      setTimeout(function() {
-         consoleGame.joinIdentical();
-         
-         var newTile = consoleGame.createOneConsoleTile();
-         if (newTile) consoleGame.onAdd.push(newTile);
-         
+      if (this.consoleGame.newTilePermission) {
          setTimeout(function() {
-            self.updateNewTiles();
-            
-            if (self.restUndo && consoleGame.newTilePermission) {
-               self.addUndo();
-            }
-            else {
-               if (consoleGame.checkGameOver()) {
-                  self.gameOver();
-               };
-            }
-            
-            self.moving = true;
-         });
-      }, self.tileSpeed);
+            this.moveAfter();
+         }.bind(this), this.tileSpeed);
+      }
+      
+      setTimeout(function() {
+         this.moving = true;
+      }.bind(this), this.tileSpeed);
       
       return this;
    }
    
-   Game2048.prototype.checkMove = function() {
-      return 
+   Game2048.prototype.moveAfter = function() {
+      this.consoleGame.joinIdentical();
+            
+      var newTile = this.consoleGame.createOneConsoleTile();
+      this.consoleGame.onAdd.push(newTile);
+      
+      this.updateNewTiles();
+      
+      if (this.restUndo) {
+         this.addUndo();
+      }
+      
+      if (this.consoleGame.checkGameOver()){
+         this.gameOver();
+      }
    }
    
    Game2048.prototype.gameOver = function() {

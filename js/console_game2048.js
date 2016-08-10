@@ -21,6 +21,18 @@
       this.createTilesStart();
    }
    
+   ConsoleGame2048.prototype.moveDirection = function(direction) {
+      if (direction === 'left') {
+         this.moveLeft();
+      } else if (direction === 'top') {
+         this.moveTop();
+      } else if (direction === 'right') {
+         this.moveRight();
+      } else if (direction === 'bottom') {
+         this.moveBottom();
+      } 
+   }
+   
    ConsoleGame2048.prototype.moveRight = function() {
       return this.move('x', this.size);
    }
@@ -130,6 +142,23 @@
       return this;
    }
    
+   ConsoleGame2048.prototype.checkGameOver = function() {
+      if (this.allConsoleTiles.length < this.size * this.size) {
+         return false;
+      }
+      
+      var direction = ['Top', 'Right', 'Bottom', 'Left'];
+      var copyTiles = JSON.stringify(this.allConsoleTiles);
+      
+      for (var i = 0; i < direction.length; i++) {
+         this['move' + direction[i]]();
+         this.allConsoleTiles = JSON.parse(copyTiles);
+         if (this.newTilePermission) return false;
+      }
+      
+      return true;
+   }
+   
    ConsoleGame2048.prototype.createTilesStart = function() {
       for (var i = 0; i < this.nConsoleTilesStart; i++) {
          this.createOneConsoleTile();
@@ -150,23 +179,6 @@
          ++g.index : g.index = 0;
          
       return tile;
-   }
-   
-   ConsoleGame2048.prototype.checkGameOver = function() {
-      if (this.allConsoleTiles.length < this.size * this.size) {
-         return false;
-      }
-      
-      var direction = ['Top', 'Right', 'Bottom', 'Left'];
-      var copyTiles = JSON.stringify(this.allConsoleTiles);
-      
-      for (var i = 0; i < direction.length; i++) {
-         this['move' + direction[i]]();
-         this.allConsoleTiles = JSON.parse(copyTiles);
-         if (this.newTilePermission) return false;
-      }
-      
-      return true;
    }
    
    ConsoleGame2048.prototype.getConsoleTileOptions = function(x, y, n) {
