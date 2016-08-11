@@ -1,6 +1,6 @@
 ﻿/* script whith defer */
 
-//Конструкторы: Tile, ConsoleTile, Random
+//Конструкторы: Tile, ConsoleTile, Score, BestScore, Random
 ;(function(){
    "use strict"
    
@@ -98,6 +98,24 @@
    }
    
    /** 
+    * Конструктор плиток с числами для игры 2048 (Консольный вариант)
+    *
+    * @param {object} options. Настройки плитки. Содержит свойства: 
+    * {number} x, y, n - соответствено координаты х, y и значение n
+    */
+   window.ConsoleTile = function(options) {
+      this.create(options);
+   }
+   
+   ConsoleTile.prototype.create = function(options) {      
+      this.x = options.x || 1;
+      this.y = options.y || 1;
+      this.n = options.n || 2;
+      
+      return this;
+   }
+   
+   /** 
     * Конструктор Score
     *
     * @param {object} options - настройки. Содержит свойства:
@@ -160,24 +178,61 @@
       
       return this;
    }
-
+   
    /** 
-    * Конструктор плиток с числами для игры 2048 (Консольный вариант)
+    * Конструктор BestScore
     *
-    * @param {object} options. Настройки плитки. Содержит свойства: 
-    * {number} x, y, n - соответствено координаты х, y и значение n
-    */
-   window.ConsoleTile = function(options) {
-      this.create(options);
+    * @param {object} options - настройки. Содержит свойства:
+    * {html element} element - элемент для score
+    */  
+
+   window.BestScore = function(options) {
+      this.createOptions(options);
+      this.create();
    }
    
-   ConsoleTile.prototype.create = function(options) {      
-      this.x = options.x || 1;
-      this.y = options.y || 1;
-      this.n = options.n || 2;
+   BestScore.prototype.createOptions = function(options) {
+      this.element = options.element;
       
       return this;
    }
+   
+   BestScore.prototype.create = function() {
+      if (localStorage[this.PROP_STORAGE] === undefined) {
+         localStorage[this.PROP_STORAGE] = 0;
+      }
+      
+      this.editVal(localStorage[this.PROP_STORAGE]);
+      
+      return this;
+   }
+   
+   BestScore.prototype.add = function(val) {
+      if (val > this.getVal()) {
+         this.editVal(val);
+         this.save();
+      }
+   }
+   
+   BestScore.prototype.editVal = function(val) {
+      this.element.innerText = val;
+      
+      return this;
+   }
+   
+   BestScore.prototype.getVal = function() {
+      return +this.element.innerText;
+   }
+   
+   BestScore.prototype.save = function() {
+      if (+localStorage[this.PROP_STORAGE] < this.getVal()) {
+         localStorage[this.PROP_STORAGE] = this.getVal();
+      }
+     
+      return this;
+   }
+   
+   BestScore.prototype.PROP_STORAGE = 'game2048__bestscore';
 
    /** 
     * Конструктор рандомных чисел

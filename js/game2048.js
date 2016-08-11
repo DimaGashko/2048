@@ -185,9 +185,8 @@
    }
    
    Game2048.prototype.gameOver = function() {
-      this.gameLosing = true;
       this.consoleGame.gameOver();
-      
+      this.gameLosing = true;
       return this;
    }
    
@@ -301,6 +300,7 @@
    
    Game2048.prototype.updateScore = function(n) {
       this.Score.add(n);
+      this.BestScore.add(this.Score.getVal());
       
       return this;
    }
@@ -346,6 +346,10 @@
          element: this.el.score,
          scorePlus: this.el.scorePlus,
       });
+      
+      this.BestScore = new BestScore({
+         element: this.el.best,
+      })
    }
    
    Game2048.prototype.corectOptions = function() {
