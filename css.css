@@ -84,10 +84,10 @@
 
 .game__name {
    position: absolute;
-   font-size: 45px;
+   font-size: 40px;
    color: #776e65;
    font-weight: bold;
-   top: 37px; left: 5px;
+   top: 42px; left: 5px;
 }
 
 .game__head-right {
@@ -110,6 +110,19 @@
 .game__score-name, .game__best-name {
    color: #EEE4DA;
    font-size: 12px;
+}
+
+.game__score-n, .game__best-n {
+   overflow:hidden;
+   text-align: center;
+	white-space: nowrap;
+	text-overflow:ellipsis;
+   max-width: 45px;
+   transition: max-width .5s; 
+}
+
+.game__score-n:hover, .game__best-n:hover {
+   max-width: 100px;
 }
 
 .game__score {

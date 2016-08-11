@@ -38,13 +38,16 @@
    }
    
    Game2048.prototype.updateMetrics = function() {
-      var metrics = Game2048.prototype.metrics = {};
+      var m = Game2048.prototype.metrics = {};
       
-      metrics.border = this.el.border.clientWidth;
-      metrics.cellBorder = this.getCellBorder();
-      metrics.widthCell = this.getWidthCell();
-      metrics.tileSize = this.getTileSize();
-      metrics.oneCoordinatInPx = this.getOneCoordinatInPx();
+      m.border = this.el.border.clientWidth;
+      m.cellBorder = this.getCellBorder();
+      m.widthCell = this.getWidthCell();
+      m.tileSize = this.getTileSize();
+      m.oneCoordinatInPx = this.getOneCoordinatInPx();
+      m.fontSize = this.getFontSize();
+      
+      return this;
    }
    
    Game2048.prototype.getTileSize = function() {
@@ -55,6 +58,10 @@
    Game2048.prototype.getWidthCell = function() {
       return this.metrics.border / this.size - 
          this.metrics.cellBorder * 2;
+   }
+   
+   Game2048.prototype.getFontSize = function() {
+      return this.metrics.tileSize * 0.385;
    }
    
    Game2048.prototype.getCellBorder = function() {
@@ -262,6 +269,7 @@
          } else {
             options.parent = this.el.border;
             options.size = this.metrics.widthCell;
+            options.fontSize = this.metrics.fontSize;
             this.allTiles[consoleTiles[i].index] = new Tile(options)
          }
       }
@@ -282,6 +290,7 @@
             size: this.metrics.widthCell,
             left: this.parseCoordinatInPx(now.x),
             top: this.parseCoordinatInPx(now.y),
+            fontSize: this.metrics.fontSize,
             n: now.n,
          })
          

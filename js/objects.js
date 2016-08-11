@@ -11,6 +11,7 @@
     * {number} x, y, n - соответствено координаты х, y и значение
     * {html element} parent - родительский элемент
     * {number} size - ширина и высота плитки
+    * {number} fontSize - размер шрифта
     */
    window.Tile = function(options) {
       this.createOptions(options);
@@ -50,7 +51,7 @@
       this.el.style.width = this.size + 'px';
       this.el.style.height = this.size + 'px';
       this.el.style['line-height'] = this.size + 'px';
-      this.el.style['font-size'] = '';
+      this.el.style['font-size'] = this.fontSize + 'px';
       
       this.el.style.left = this.left + 'px';
       this.el.style.top = this.top + 'px';
@@ -89,6 +90,7 @@
       this.top = options.top;
       this.n = options.n;
       this.size = options.size;
+      this.fontSize = options.fontSize || 20;
       
       return this;
    }
