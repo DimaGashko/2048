@@ -1,17 +1,18 @@
 <NotepadPlus>
     <Session activeView="0">
-        <mainView activeIndex="6">
+        <mainView activeIndex="5">
             <File firstVisibleLine="0" xOffset="0" scrollWidth="203" startPos="132" endPos="132" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\core.js" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="567" startPos="6011" endPos="6011" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\game2048.js" />
-            <File firstVisibleLine="60" xOffset="0" scrollWidth="595" startPos="2109" endPos="2115" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\console_game2048.js" />
+            <File firstVisibleLine="198" xOffset="0" scrollWidth="567" startPos="5822" endPos="5822" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\game2048.js" />
+            <File firstVisibleLine="76" xOffset="0" scrollWidth="595" startPos="4291" endPos="4291" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\console_game2048.js" />
             <File firstVisibleLine="90" xOffset="0" scrollWidth="490" startPos="0" endPos="0" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\scaling.js" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="413" startPos="0" endPos="0" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\events.js" />
             <File firstVisibleLine="0" xOffset="0" scrollWidth="462" startPos="542" endPos="542" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\phone.js" />
-            <File firstVisibleLine="66" xOffset="0" scrollWidth="518" startPos="2644" endPos="2644" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\objects.js" />
+            <File firstVisibleLine="46" xOffset="0" scrollWidth="518" startPos="2132" endPos="2132" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\objects.js" />
+            <File firstVisibleLine="131" xOffset="0" scrollWidth="644" startPos="4698" endPos="4698" selMode="0" lang="Javascript" encoding="-1" filename="C:\Users\root\Desktop\2048\js\message.js" />
         </mainView>
         <subView activeIndex="1">
-            <File firstVisibleLine="200" xOffset="0" scrollWidth="574" startPos="4086" endPos="4086" selMode="0" lang="CSS" encoding="-1" filename="C:\Users\root\Desktop\2048\css.css" />
-            <File firstVisibleLine="0" xOffset="0" scrollWidth="616" startPos="443" endPos="443" selMode="0" lang="HTML" encoding="-1" filename="C:\Users\root\Desktop\2048\index.html" />
+            <File firstVisibleLine="269" xOffset="0" scrollWidth="574" startPos="5513" endPos="5506" selMode="0" lang="CSS" encoding="-1" filename="C:\Users\root\Desktop\2048\css.css" />
+            <File firstVisibleLine="59" xOffset="0" scrollWidth="623" startPos="3643" endPos="3622" selMode="0" lang="HTML" encoding="-1" filename="C:\Users\root\Desktop\2048\index.html" />
         </subView>
     </Session>
 </NotepadPlus>

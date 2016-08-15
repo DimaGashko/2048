@@ -153,7 +153,10 @@
    }
    
    Game2048.prototype.move = function(direction) {
-      if (!this.moving || !direction || this.gameLosing) {
+      var check = !this.moving || !direction || 
+         this.gameLosing || this.gamePaused;
+         
+      if (check) {
          return this;
       }
       
@@ -200,7 +203,7 @@
       return this;
    }
    
-   Game2048.prototype.combo_8 = function() {
+   Game2048.prototype.combo_32 = function() {
       if (this.won === false) { 
          setTimeout(this.gameWin.bind(this), this.tileSpeed);
          this.won = true;
@@ -231,22 +234,17 @@
    }
    
    Game2048.prototype.gameWin = function() {
-      var self = this;
-   
       if (!this.ClassYouWin) {
          this.ClassYouWin = new YouWin({
             restart: this.restart.bind(this),
-            start: function() {
-               console.log('start')
-               self.moving = false;
-            },
-            end: function() {
+            afterHide: function() {
                console.log('end')
-               self.moving = true;
-            },
+               this.gamePaused = false;
+            }.bind(this),
          })
       }
       
+      this.gamePaused = true;
       this.ClassYouWin.show();
    }
    
@@ -400,6 +398,7 @@
       this.allTiles = {};
       this.gameLosing = false; 
       this.won = false;
+      this.gamePaused = false;
       this.createOtherConstructors();
       
       return this;

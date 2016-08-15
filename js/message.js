@@ -6,10 +6,10 @@
    
    /** 
     * Конструктор Message 
-    * Не предназначен на самостоятельное еспользование
+    * Не предназначен на самостоятельное использование
     * @param {object} options. Настройки. Содержит свойства:
-    * {function} start - выполняется в начале show
-    * {function} end - выполняется в конце show
+    * {function} beforeShow - выполняется в начале show
+    * {function} afterHide - выполняется в конце show
     */
    
    function Message(options) {
@@ -18,7 +18,7 @@
    }
    
    Message.prototype.show = function(options) {
-      this.start.apply(this.start, arguments); 
+      this.beforeShow.apply(this.beforeShow, arguments); 
       
       this.el.container.style.display = 'block';
       
@@ -33,7 +33,7 @@
       this.el.container.style.display = 'none';
       this.el.container.style.opacity = 0;
       
-      this.end.apply(this.end, arguments); 
+      this.afterHide.apply(this.afterHide, arguments); 
       
       return this;
    }
@@ -54,8 +54,8 @@
    Message.prototype.createOptions = function(options) {
       this._defaultFun = function() {};
       
-      this.start = options.start || this._defaultFun;
-      this.end = options.end || this._defaultFun;
+      this.beforeShow = options.beforeShow || this._defaultFun;
+      this.afterHide = options.afterHide || this._defaultFun;
       
       return this;
    }
@@ -64,10 +64,10 @@
    
    
    /** 
-    * Конструктор GameOver
+    * Конструктор GameOver (наследует от Message)
     *
     * @param {object} options. Настройки. Содержит свойства: 
-    * {function} functionRestart - функция, выполняемая при клике по restart
+    * {function} restart - функция, выполняемая при клике по restart
     */
    
    window.GameOver = function(options) {
@@ -89,7 +89,6 @@
       
       this.el.restart = this.el.container.
          getElementsByClassName('game__message-restart')[0];
-      console.log(this.el)
       return this;
    }
    
@@ -116,11 +115,11 @@
    
    
    /** 
-    * Конструктор YouWin
+    * Конструктор YouWin (наследует от Message)
     *
     * @param {object} options. Настройки. Содержит свойства: 
-    * {function} functionRestart - функция, выполняемая при клике по restart
-    * {function} functionContinue - Функция, выполняемая при клике по keep
+    * {function} restart - функция, выполняемая при клике по restart
+    * {function} keep - Функция, выполняемая при клике по keep
     */
    
    window.YouWin = function(options) {
@@ -175,5 +174,79 @@
    };
    
    YouWin.prototype.containerClassName = 'game__you-win';
+   
+   
+   /** 
+    * Конструктор Combo (наследует от Message)
+    *
+    * @param {object} options. Настройки. Содержит свойства: 
+    * {string} text - Отображаемый текст
+    * {number} delay - Через сколько милисекунд будет скрыт text
+    */
+   
+   window.Combo = function(options) {
+      //Функциональное наследование от Message
+      Message.apply(this, arguments); 
+      
+      this.setText();
+   }
+   
+   //Прототипное наследование от Message
+   Combo.prototype = Object.create(Combo.prototype);
+   Combo.prototype.constructor = Combo;
+   
+   //Другие методы Combo.prototype
+   
+   Combo.prototype.getHTMLElements = function() {
+      Message.prototype.getHTMLElements.apply(this, arguments);
+      
+      this.el.p = this.el.container.
+         getElementsByClassName('game__message-p-combo')[0];
+   
+      return this;
+   }
+   
+   Combo.prototype.setText = function() {
+      this.el.p.innerText = this.text;
+   }
+   
+   Combo.prototype.show = function(text) {   
+      if (text) {
+         this.text = text;
+         this.setText();
+      }
+   
+      this.el.container.style.display = 'block';
+      this.el.container.style.opacity = 1;
+      
+      setTimeout(function() {
+         this.hide();
+      }.bind(this), this.delay);
+      
+      return this;
+   }
+   
+   Combo.prototype.hide = function() {
+      this.el.container.style.opacity = 0;
+      
+      setTimeout(function() {
+         this.el.container.style.display = 'none';
+      }, 50);
+      
+      return this;
+   }
+   
+   
+   
+   Combo.prototype.createOptions = function(options) {
+      Message.prototype.createOptions.apply(this, arguments);
+      
+      this.text = options.text || 'Monster';
+      this.delay = options.delay || 1000;
+      
+      return this;
+   };
+   
+   Combo.prototype.containerClassName = 'game__combo';
    
 }());
