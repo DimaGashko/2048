@@ -203,7 +203,7 @@
       return this;
    }
    
-   Game2048.prototype.combo_32 = function() {
+   Game2048.prototype.combo_2048 = function() {
       if (this.won === false) { 
          setTimeout(this.gameWin.bind(this), this.tileSpeed);
          this.won = true;
@@ -213,11 +213,11 @@
    }
    
    Game2048.prototype.combo_4096 = function() {
-      console.log(4096);
+      this.Combo.show('Monster');
    }
    
-   Game2048.prototype.combo_8192 = function() {
-      console.log(8192);
+   Game2048.prototype.combo_8096 = function() {
+      this.Combo.show('Kiborg');
    }
    
    Game2048.prototype.gameOver = function() {
@@ -387,6 +387,7 @@
       
       this.corectOptions();
       this.createConsoleGame();
+      this.Combo = new Combo({delay: 1500});
       
       return this;
    }

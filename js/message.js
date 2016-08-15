@@ -1,6 +1,6 @@
 ﻿/* script whith defer */
 
-//Конструкторы: GameOver, YouWin
+//Конструкторы: GameOver, YouWin, Combo
 ;(function(){
    "use strict"
    
@@ -210,14 +210,15 @@
       this.el.p.innerText = this.text;
    }
    
-   Combo.prototype.show = function(text) {   
-      if (text) {
-         this.text = text;
-         this.setText();
-      }
+   Combo.prototype.updateText = function(text) {
+      this.text = text || this.text;
+      this.setText();
+   }
    
-      this.el.container.style.display = 'block';
-      this.el.container.style.opacity = 1;
+   Combo.prototype.show = function(text) {  
+      this.updateText(text);
+   
+      Message.prototype.show.apply(this, arguments);
       
       setTimeout(function() {
          this.hide();
@@ -231,7 +232,7 @@
       
       setTimeout(function() {
          this.el.container.style.display = 'none';
-      }, 50);
+      }.bind(this), 500);
       
       return this;
    }
