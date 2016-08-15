@@ -200,7 +200,7 @@
       return this;
    }
    
-   Game2048.prototype.combo_128 = function() {
+   Game2048.prototype.combo_8 = function() {
       if (this.won === false) { 
          setTimeout(this.gameWin.bind(this), this.tileSpeed);
          this.won = true;
@@ -218,13 +218,36 @@
    }
    
    Game2048.prototype.gameOver = function() {
-      alert('Game Over');
+      if (!this.ClassGameOver) {
+         this.ClassGameOver = new GameOver({
+            restart: this.restart.bind(this),
+         })
+      }
+      
+      this.ClassGameOver.show();
       this.gameLosing = true;
+      
       return this;
    }
    
    Game2048.prototype.gameWin = function() {
-      alert('You Win');
+      var self = this;
+   
+      if (!this.ClassYouWin) {
+         this.ClassYouWin = new YouWin({
+            restart: this.restart.bind(this),
+            start: function() {
+               console.log('start')
+               self.moving = false;
+            },
+            end: function() {
+               console.log('end')
+               self.moving = true;
+            },
+         })
+      }
+      
+      this.ClassYouWin.show();
    }
    
    
