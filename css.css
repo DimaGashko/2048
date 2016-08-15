@@ -274,6 +274,50 @@
    top: 2px;
 }
 
+.game__message {
+   position: absolute;
+   left: 0; right: 0;
+   top: 0; bottom: 0;
+   z-index: 100;
+   text-align: center;
+   background: rgba(238, 228, 218, 0.5);
+   padding-top: 75px;
+   color: #776e65;
+   transition: opacity .8s; 
+}
+
+.game__message-p {
+   font-size: 40px;
+   font-weight: bold;
+}
+
+.game__message-button {
+   display: inline-block;
+   background: #8f7a66;
+   color: #f9f6f2;
+   height: 40px;
+   line-height: 42px;
+   cursor: pointer;
+   font-weight: bold;
+   padding: 0 15px;
+   margin-bottom: 15px;
+   border-radius: 3px;
+   box-shadow: inset 0 0 0 50px rgba(255, 255, 255, .2);
+   transition: box-shadow .5s;
+}
+
+.game__message-button:hover {
+   box-shadow: none;
+}  
+
+.game__message-button:active {
+   box-shadow: inset 0 0 0 50px rgba(255, 255, 255, .5);
+}  
+
+.game__game-over, .game__you-win {
+   display: none;
+}
+
 /* PHONE STYLE */
 
 .phone {
@@ -426,7 +470,7 @@
    top: 0; right: 0;
    left: 0; bottom: 0;
    margin: auto;
-   z-index: 20;
+   z-index: 999999;
    display: none;
    opacity: 0;
    transition: opacity .1s;

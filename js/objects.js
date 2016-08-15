@@ -26,15 +26,14 @@
       return this;
    }
    
-   Tile.prototype.createBaseTile = function create(options) {
+   Tile.prototype.createBaseTile = function (options) {
       this.el = document.createElement('div');
-      this.setClassName();
+      this.setClassName();      
       
-      this.el.innerText = this.n;
-      this.el.style['z-index'] = (create.lastZIndex) ? 
-         ++create.lastZIndex : create.lastZIndex = 1;
-      
+      this.el.innerText = this.n;      
       this.parent.appendChild(this.el);
+      
+      return this;
    }
    
    Tile.prototype.createTileStart = function(options) {
@@ -45,6 +44,8 @@
       
       this.el.style.left = this.left + this.size / 2 + 'px';
       this.el.style.top = this.top + this.size / 2 + 'px';
+      
+      return this;
    }
    
    Tile.prototype.createTileEnd = function(options) {
@@ -55,6 +56,8 @@
       
       this.el.style.left = this.left + 'px';
       this.el.style.top = this.top + 'px';
+      
+      return this;
    }
    
    //options {left, top, n}
@@ -65,6 +68,8 @@
       this.el.style.left = this.left + 'px';
       this.el.style.top = this.top + 'px';
       this.el.innerText = this.n;
+      
+      return this;
    }
    
    Tile.prototype.updateOptions = function(left, top, n) {
@@ -78,6 +83,8 @@
    Tile.prototype.setClassName = function() {
       this.el.className = this.CLASSES.base + ' ' +
          this.CLASSES.base + '-' + this.n;
+         
+      return this;
    }
    
    Tile.prototype.remove = function() {

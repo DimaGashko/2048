@@ -61,6 +61,7 @@
    }
    
    Game2048.prototype.getFontSize = function() {
+      //Шрифт равер 38,5% от размеров плитки
       return this.metrics.tileSize * 0.385;
    }
    
@@ -191,11 +192,41 @@
       }
    }
    
+   Game2048.prototype.checkCombo = function(tile) {
+      if (this['combo_' + tile.n]) {
+         this['combo_' + tile.n]();
+      }
+      
+      return this;
+   }
+   
+   Game2048.prototype.combo_128 = function() {
+      if (this.won === false) { 
+         setTimeout(this.gameWin.bind(this), this.tileSpeed);
+         this.won = true;
+      }
+      
+      return this;
+   }
+   
+   Game2048.prototype.combo_4096 = function() {
+      console.log(4096);
+   }
+   
+   Game2048.prototype.combo_8192 = function() {
+      console.log(8192);
+   }
+   
    Game2048.prototype.gameOver = function() {
-      this.consoleGame.gameOver();
+      alert('Game Over');
       this.gameLosing = true;
       return this;
    }
+   
+   Game2048.prototype.gameWin = function() {
+      alert('You Win');
+   }
+   
    
    Game2048.prototype.addUndo = function() {
       this.consoleGame.addTilesUndo();
@@ -345,6 +376,7 @@
       this.lastScores = [];
       this.allTiles = {};
       this.gameLosing = false; 
+      this.won = false;
       this.createOtherConstructors();
       
       return this;

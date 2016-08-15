@@ -34,22 +34,22 @@
    }
    
    ConsoleGame2048.prototype.moveRight = function() {
-      return this.move('x', this.size);
+      return this._move('x', this.size);
    }
    
    ConsoleGame2048.prototype.moveLeft = function() {
-      return this.move('x', 1);
+      return this._move('x', 1);
    }
    
    ConsoleGame2048.prototype.moveTop = function() {
-      return this.move('y', 1);
+      return this._move('y', 1);
    }
    
    ConsoleGame2048.prototype.moveBottom = function() {
-      return this.move('y', this.size);
+      return this._move('y', this.size);
    }
    
-   ConsoleGame2048.prototype.move = function(axis, startValue) {
+   ConsoleGame2048.prototype._move = function(axis, startValue) {
       var allTiles = this.allConsoleTiles;
       var otherAxis = (axis === 'x') ? 'y' : 'x';
       var minusPos = (startValue === 1) ? -1 : 1;
@@ -136,12 +136,6 @@
       return this;
    }
    
-   ConsoleGame2048.prototype.gameOver = function() {
-      alert('Game Over');
-      
-      return this;
-   }
-   
    ConsoleGame2048.prototype.checkGameOver = function() {
       if (this.allConsoleTiles.length < this.size * this.size) {
          return false;
@@ -157,7 +151,7 @@
       }
       
       return true;
-   }
+   }   
    
    ConsoleGame2048.prototype.createTilesStart = function() {
       for (var i = 0; i < this.nConsoleTilesStart; i++) {
@@ -177,7 +171,9 @@
       this.allConsoleTiles.push(tile);
       tile.index = (g.index !== undefined) ? 
          ++g.index : g.index = 0;
-         
+
+      this.Game.checkCombo(tile);
+      
       return tile;
    }
    
