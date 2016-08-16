@@ -1,6 +1,6 @@
 ﻿/* script whith defer */
 
-//Конструкторы: GameOver, YouWin, Combo
+//Конструкторы: GameOver, YouWin, Combo, Menu
 ;(function(){
    "use strict"
    
@@ -48,10 +48,17 @@
             getElementsByClassName(this.containerClassName)[0];
       }
       
+      if (this.el.container) {
+         this.el.parent = this.el.container.
+            getElementsByClassName('game__message-parent')[0];
+      }
+      
       return this;
    }
    
    Message.prototype.createOptions = function(options) {
+      if (!options) options = {};
+      
       this._defaultFun = function() {};
       
       this.beforeShow = options.beforeShow || this._defaultFun;
@@ -249,5 +256,66 @@
    };
    
    Combo.prototype.containerClassName = 'game__combo';
+   
+
+   /** 
+    * Конструктор Menu (наследует от Message)
+    *
+    * @param {object} options. Настройки. Содержит свойства: 
+    *
+    */
+   window.Menu = function(options) {
+      //Функциональное наследование от Message
+      Message.apply(this, arguments); 
+      
+      this.allItems = [];      
+   }
+   
+   //Прототипное наследование от Message
+   Menu.prototype = Object.create(Message.prototype);
+   Menu.prototype.constructor = Menu;
+   
+   //Другие методы Menu.prototype
+   
+   //Добавляет элемент меню
+   Menu.prototype.addItem = function(text, calback) {
+      this.allItems.push( this.createItem(text, calback) );
+      
+      return this;
+   }
+   
+   Menu.prototype.createItem = function(text, calback) {
+      var item = document.createElement('p');
+      item.className = this.itemClassName;
+      item.innerText = text;
+      
+      this.addEvent(item, calback);
+      
+      this.el.parent.appendChild(item);
+      
+      return this;
+   }
+   
+   Menu.prototype.addEvent = function(item, calback) {
+      item.addEventListener('click', function() {
+         calback.apply(calback);
+         this.hide();
+      }.bind(this));
+      
+      return this;
+   }
+   
+   Menu.prototype.hide = function() {
+      this.el.container.style.opacity = 0;
+      
+      setTimeout(function() {
+         this.el.container.style.display = 'none';
+      }.bind(this), 500);
+      
+      return this;
+   }
+   
+   Menu.prototype.containerClassName = 'game__menu';
+   Menu.prototype.itemClassName = 'game__message-button game-menu-item';
    
 }());

@@ -149,6 +149,12 @@
          }          
       });
       
+      //show menu 
+      this.el.set.addEventListener('click', function() {
+         self.createMenu();
+         self.Menu.show();
+      });
+      
       return self;
    }
    
@@ -387,7 +393,7 @@
       
       this.corectOptions();
       this.createConsoleGame();
-      this.Combo = new Combo({delay: 1500});
+      this.Combo = new Combo({delay: 3000});
       
       return this;
    }
@@ -435,6 +441,25 @@
          size: this.size, 
          undoLen: this.undoLen,
       })
+   }
+   
+   Game2048.prototype.createMenu = function() {
+      if (this.Menu) return this.Menu;
+      var self = this;
+      
+      this.Menu = new Menu();
+      
+      this.Menu.addItem('Continue', function() {});
+
+      this.Menu.addItem('Restart', function() {
+         self.restart();
+      });
+
+      this.Menu.addItem('Settings', function() {
+         console.log('Settings');
+      });
+      
+      return  this.Menu; 
    }
    
    Game2048.prototype.keyDirection = {
