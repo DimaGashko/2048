@@ -279,6 +279,10 @@
    
    //Добавляет элемент меню
    Menu.prototype.addItem = function(text, calback) {
+      if (typeof calback !== 'function') {
+         calback = function() {}
+      }
+   
       this.allItems.push( this.createItem(text, calback) );
       
       return this;
@@ -317,5 +321,26 @@
    
    Menu.prototype.containerClassName = 'game__menu';
    Menu.prototype.itemClassName = 'game__message-button game-menu-item';
+   
+   /** 
+    * Конструктор Settings (наследует от Settings)
+    *
+    * @param {object} options. Настройки. Содержит свойства: 
+    *
+    */
+   window.Settings = function(options) {
+      //Функциональное наследование от Menu
+      Menu.apply(this, arguments); 
+      
+      this.allItems = [];      
+   }
+   
+   //Прототипное наследование от Menu
+   Settings.prototype = Object.create(Menu.prototype);
+   Settings.prototype.constructor = Settings;
+   
+   //Другие методы Settings.prototype
+  
+   Settings.prototype.containerClassName = 'game__setings';
    
 }());

@@ -288,7 +288,7 @@
    color: #776e65;
    display: none;
    opacity: 0;
-   transition: opacity 1.5s; 
+   transition: opacity 1.2s; 
 }
 
 .game__message:before {
@@ -302,6 +302,7 @@
 .game__message-parent{
    display:inline-block;
    vertical-align:middle;
+   max-width: 90%;
 }
 .game__message-p {
    font-size: 40px;
@@ -313,6 +314,7 @@
    background: #8f7a66;
    color: #f9f6f2;
    height: 40px;
+   max-width: 50%;
    line-height: 42px;
    cursor: pointer;
    font-weight: bold;

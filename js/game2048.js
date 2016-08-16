@@ -449,17 +449,37 @@
       
       this.Menu = new Menu();
       
-      this.Menu.addItem('Continue', function() {});
+      this.Menu.addItem('Continue');
 
       this.Menu.addItem('Restart', function() {
          self.restart();
       });
 
       this.Menu.addItem('Settings', function() {
-         console.log('Settings');
+         self.createSettings();
+         self.Settings.show();
       });
       
-      return  this.Menu; 
+      return this.Menu; 
+   }
+
+   Game2048.prototype.createSettings = function() {
+      if (this.Settings) return this.Settings;
+      var self = this;
+      
+      this.Settings = new Settings();
+      
+      this.Settings.addItem('Size');
+
+      this.Settings.addItem('Count tile');
+      
+      this.Settings.addItem('Count tile');
+
+      this.Settings.addItem('Undo', function() {
+         self.Menu.show();
+      });
+      
+      return this.Settings; 
    }
    
    Game2048.prototype.keyDirection = {
