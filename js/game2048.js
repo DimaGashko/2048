@@ -20,6 +20,7 @@
       this.getHTMLElements();
       this.createOptions(options);
       this.updateMetrics();
+      this.addOptions();
       this.create();
       this.initEvents();
    }
@@ -81,7 +82,6 @@
    }
    
    Game2048.prototype.create = function() {
-      this.addOptions();
       this.corectTextElUndo();
       this.createCells();
       this.updateTiles();
@@ -151,8 +151,7 @@
       
       //show menu 
       this.el.set.addEventListener('click', function() {
-         self.createMenu();
-         self.Menu.show();
+         self.getMenu().show();
       });
       
       return self;
@@ -278,9 +277,9 @@
    Game2048.prototype.restart = function() {
       this.createOtherOptions();
       this.clearTiles();
-      this.corectTextElUndo();
       this.consoleGame.restart();
-      this.updateTiles();
+      this.updateMetrics();
+      this.create();
       
       return this;
    }
@@ -443,7 +442,7 @@
       })
    }
    
-   Game2048.prototype.createMenu = function() {
+   Game2048.prototype.getMenu = function() {
       if (this.Menu) return this.Menu;
       var self = this;
       
@@ -456,30 +455,49 @@
       });
 
       this.Menu.addItem('Settings', function() {
-         self.createSettings();
-         self.Settings.show();
+         self.getSettings().show();
       });
       
       return this.Menu; 
    }
 
-   Game2048.prototype.createSettings = function() {
-      if (this.Settings) return this.Settings;
+   Game2048.prototype.getSettings = function() {
       var self = this;
+      if (self.Settings) return self.Settings;
       
-      this.Settings = new Settings();
+      self.Settings = new Menu({
+         containerClassName: 'game__setings',
+      });
       
-      this.Settings.addItem('Size');
+      self.Settings.addItem('Continue');
+      
+      self.Settings.addItem('Size: ' + self.size, function() {
+         var pr = self.getPrompt();
+         pr.onHide = function() {
+            self.Settings.show();
+            self.size = +pr.getVal();
+            self.consoleGame.size = self.size;
+            console.log(+pr.getVal());
+            self.restart();
+         }
+         pr.show(self.size);
+      });
 
-      this.Settings.addItem('Count tile');
+      self.Settings.addItem('Undo: 5');
       
-      this.Settings.addItem('Count tile');
+      self.Settings.addItem('Tiles start: 5');
 
-      this.Settings.addItem('Undo', function() {
+      self.Settings.addItem('Back', function() {
          self.Menu.show();
       });
       
-      return this.Settings; 
+      return self.Settings; 
+   }
+   
+   Game2048.prototype.getPrompt = function() {
+      if (this.Prompt) return this.Prompt;
+      
+      return this.Propmt = new Prompt({});
    }
    
    Game2048.prototype.keyDirection = {

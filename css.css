@@ -274,8 +274,6 @@
    top: 2px;
 }
 
-
-
 .game__message {
    position: absolute;
    left: 0; right: 0;
@@ -304,6 +302,7 @@
    vertical-align:middle;
    max-width: 90%;
 }
+
 .game__message-p {
    font-size: 40px;
    font-weight: bold;
@@ -314,7 +313,6 @@
    background: #8f7a66;
    color: #f9f6f2;
    height: 40px;
-   max-width: 50%;
    line-height: 42px;
    cursor: pointer;
    font-weight: bold;
@@ -345,6 +343,19 @@
    display: block;
    padding-left: 50px;
    padding-right: 50px;
+}
+
+.game_prompt-input {
+   width: 80%;
+   padding-bottom: 3px;
+   font-size: 50px;
+   font-weight: bold;
+   color: #8f7a66;
+   background: transparent;
+   text-align: center;
+   border: none;
+   border-bottom: 2px solid;
+   outline: none;
 }
 
 /* PHONE STYLE */

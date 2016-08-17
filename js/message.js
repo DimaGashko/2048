@@ -1,20 +1,21 @@
 ﻿/* script whith defer */
 
-//Конструкторы: GameOver, YouWin, Combo, Menu
+//Конструкторы: GameOver, YouWin, Combo, Menu, Prompt (наследуют от Message)
 ;(function(){
    "use strict"
    
    /** 
     * Конструктор Message 
     * Не предназначен на самостоятельное использование
+    *
     * @param {object} options. Настройки. Содержит свойства:
     * {function} beforeShow - выполняется в начале show
     * {function} afterHide - выполняется в конце show
     */
    
    function Message(options) {
-      this.getHTMLElements();
       this.createOptions(options);
+      this.getHTMLElements();
    }
    
    Message.prototype.show = function(options) {
@@ -63,6 +64,9 @@
       
       this.beforeShow = options.beforeShow || this._defaultFun;
       this.afterHide = options.afterHide || this._defaultFun;
+      
+      this.containerClassName = options.containerClassName ||
+         this.containerClassName;
       
       return this;
    }
@@ -262,10 +266,9 @@
     * Конструктор Menu (наследует от Message)
     *
     * @param {object} options. Настройки. Содержит свойства: 
-    *
+    * {string} containerClassName - класс контейнера
     */
-   window.Menu = function(options) {
-      //Функциональное наследование от Message
+   window.Menu = function(options) {//Функциональное наследование от Message
       Message.apply(this, arguments); 
       
       this.allItems = [];      
@@ -322,25 +325,93 @@
    Menu.prototype.containerClassName = 'game__menu';
    Menu.prototype.itemClassName = 'game__message-button game-menu-item';
    
+   
    /** 
-    * Конструктор Settings (наследует от Settings)
+    * Конструктор Prompt (наследует от Message)
     *
-    * @param {object} options. Настройки. Содержит свойства: 
-    *
+    * @param {object} options. Настройки. Содержит свойства:
+    * {function} onShow - выполняется при .show()
+    * {function} onHide - выполняется при .hide()
     */
-   window.Settings = function(options) {
-      //Функциональное наследование от Menu
-      Menu.apply(this, arguments); 
+   window.Prompt = function(options) {//Функциональное наследование от Message
+      Message.apply(this, arguments);  
       
-      this.allItems = [];      
+      this.initEvents();
    }
    
-   //Прототипное наследование от Menu
-   Settings.prototype = Object.create(Menu.prototype);
-   Settings.prototype.constructor = Settings;
+   //Прототипное наследование от Message
+   Prompt.prototype = Object.create(Message.prototype);
+   Prompt.prototype.constructor = Prompt;
    
-   //Другие методы Settings.prototype
-  
-   Settings.prototype.containerClassName = 'game__setings';
+   //Другие методы Prompt.prototype
+   
+   Prompt.prototype.initEvents = function() {
+      this.el.input.addEventListener('blur', function() {
+         this.hide();
+      }.bind(this));
+      
+      return this;
+   }
+   
+   Prompt.prototype.getHTMLElements = function() {
+      Message.prototype.getHTMLElements.apply(this, arguments);
+      
+      this.el.input = this.el.container.
+         getElementsByClassName('game_prompt-input')[0];
+   
+      return this;
+   }
+   
+   Prompt.prototype.show = function(val) {
+      Message.prototype.show.apply(this, arguments);
+      
+      this.setVal(val);
+      this.onShow(this);
+      this.el.input.focus();
+      
+      return this;
+   }
+   
+   Prompt.prototype.hide = function(text) {
+      this.el.container.style.opacity = 0;
+      
+      setTimeout(function() {
+         this.el.container.style.display = 'none';
+      }.bind(this), 500);
+      
+      this.onHide(this);
+      
+      return this;
+   }
+   
+   Prompt.prototype.updateOnHide = function(onHide) {
+      if(typeof onHide === 'function') {
+         this.onHide = onHide;
+      }
+      
+      return this;
+   }
+   
+   Prompt.prototype.setVal = function(val) {
+      this.el.input.value = val;
+      
+      return this;
+   }
+   
+   Prompt.prototype.getVal = function() {
+      return this.el.input.value;
+   }
+   
+   Prompt.prototype.createOptions = function(options) {   
+      Message.prototype.createOptions.apply(this, arguments);
+      
+      if (options) {
+         this.onShow = options.onShow || this._defaultFun;
+         this.onHide = options.onHide || this._defaultFun;
+      }
+      return this;
+   };
+   
+   Prompt.prototype.containerClassName = 'game__prompt';
    
 }());
