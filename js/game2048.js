@@ -461,9 +461,17 @@
       return this.Menu; 
    }
 
-   Game2048.prototype.getSettings = function() {
+   Game2048.prototype.getSettings = function() {      
+      if (this.Settings) return this.Settings;
+      
+      this.createPrompt();
+      this.createSettings();
+      
+      return this.Settings; 
+   }
+   
+   Game2048.prototype.createSettings = function() {
       var self = this;
-      if (self.Settings) return self.Settings;
       
       self.Settings = new Menu({
          containerClassName: 'game__setings',
@@ -472,32 +480,46 @@
       self.Settings.addItem('Continue');
       
       self.Settings.addItem('Size: ' + self.size, function() {
-         var pr = self.getPrompt();
-         pr.onHide = function() {
-            self.Settings.show();
-            self.size = +pr.getVal();
+         self.Prompt.onHide = function() {
+            self.size = +self.Prompt.getVal();
             self.consoleGame.size = self.size;
-            console.log(+pr.getVal());
             self.restart();
+            self.Settings.editItem('size', 'Size: ' + self.size);
          }
-         pr.show(self.size);
-      });
+         self.Prompt.show(self.size);
+      }, 'size');
 
-      self.Settings.addItem('Undo: 5');
+      self.Settings.addItem('Undo: ' + self.undoLen, function() {
+         self.Prompt.onHide = function() {
+            self.undoLen = +self.Prompt.getVal();
+            self.restart();
+            self.Settings.editItem('undo', 'Undo: ' + self.undoLen);
+         }
+         self.Prompt.show(self.undoLen);
+      }, 'undo');
       
-      self.Settings.addItem('Tiles start: 5');
+      self.Settings.addItem('Tiles start: ' + self.nTilesStart, function() {
+         self.Prompt.onHide = function() {
+            self.nTilesStart = +self.Prompt.getVal();
+            self.consoleGame.nConsoleTilesStart = self.nTilesStart
+            self.restart();
+            self.Settings.editItem('tileStart', 'Tile Start: ' + self.nTilesStart);
+         }
+         self.Prompt.show(self.nTilesStart);
+      }, 'tileStart');
 
       self.Settings.addItem('Back', function() {
          self.Menu.show();
       });
       
-      return self.Settings; 
+      return this;
    }
    
-   Game2048.prototype.getPrompt = function() {
+   Game2048.prototype.createPrompt = function() {
       if (this.Prompt) return this.Prompt;
+      this.Prompt = new Prompt({});
       
-      return this.Propmt = new Prompt({});
+      return this.Prompt;
    }
    
    Game2048.prototype.keyDirection = {

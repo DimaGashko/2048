@@ -271,7 +271,7 @@
    window.Menu = function(options) {//Функциональное наследование от Message
       Message.apply(this, arguments); 
       
-      this.allItems = [];      
+      this.allItems = {};      
    }
    
    //Прототипное наследование от Message
@@ -281,12 +281,16 @@
    //Другие методы Menu.prototype
    
    //Добавляет элемент меню
-   Menu.prototype.addItem = function(text, calback) {
+   Menu.prototype.addItem = function (text, calback, id) {
       if (typeof calback !== 'function') {
          calback = function() {}
       }
-   
-      this.allItems.push( this.createItem(text, calback) );
+      
+      var item = this.createItem(text, calback);
+      
+      if(id) {
+         this.allItems[id] = item;
+      }
       
       return this;
    }
@@ -300,7 +304,7 @@
       
       this.el.parent.appendChild(item);
       
-      return this;
+      return item;
    }
    
    Menu.prototype.addEvent = function(item, calback) {
@@ -309,6 +313,13 @@
          this.hide();
       }.bind(this));
       
+      return this;
+   }
+   Menu.prototype.editItem = function(id, text) {
+      if (this.allItems[id]) {
+         this.allItems[id].innerText = text;
+      }
+     
       return this;
    }
    
