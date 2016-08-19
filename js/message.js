@@ -16,6 +16,19 @@
    function Message(options) {
       this.createOptions(options);
       this.getHTMLElements();
+      
+      document.addEventListener('keyup', function(event) {
+         console.log(event.keyCode)
+         if(event.keyCode === 27) { 
+            this.simpleHide()
+         }
+      }.bind(this));
+   }
+   
+   Message.prototype.a = function() {
+      
+      
+      return this;
    }
    
    Message.prototype.show = function(options) {
@@ -35,6 +48,13 @@
       this.el.container.style.opacity = 0;
       
       this.afterHide.apply(this.afterHide, arguments); 
+      
+      return this;
+   }
+   
+   Message.prototype.simpleHide = function() {
+      this.el.container.style.display = 'none';
+      this.el.container.style.opacity = 0;
       
       return this;
    }
@@ -360,6 +380,12 @@
       this.el.input.addEventListener('blur', function() {
          this.hide();
       }.bind(this));
+      
+      this.el.input.addEventListener('keyup', function(event) {
+         if (event.keyCode === 13) {
+            this.hide();
+         }
+      }.bind(this))
       
       return this;
    }

@@ -286,7 +286,7 @@
    color: #776e65;
    display: none;
    opacity: 0;
-   transition: opacity 0.8s; 
+   transition: opacity 0.5s; 
 }
 
 .game__message:before {

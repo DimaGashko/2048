@@ -477,8 +477,6 @@
          containerClassName: 'game__setings',
       });
       
-      self.Settings.addItem('Continue');
-      
       self.Settings.addItem('Size: ' + self.size, function() {
          self.Prompt.onHide = function() {
             self.size = +self.Prompt.getVal();
