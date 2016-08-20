@@ -335,6 +335,10 @@
    background: none;
 }
 
+.game__you-win {
+   font-size: 15px;
+}
+
 .game__message-p-combo {
    color: #a50000;
 }

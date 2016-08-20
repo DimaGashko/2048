@@ -98,10 +98,14 @@
       this.undoText = this.el.undo.innerText;
    }
    
-   Game2048.prototype.createCells = function() {
+   Game2048.prototype.createCells = function createCells() {
+      if(createCells.lastSize === this.size) return;
+      createCells.lastSize = this.size;
+      
       for (var i = 0, html = ''; i < this.size * this.size; i++) {
          html += this.getCellHTML();
       }
+      
       this.el.border.innerHTML = html;
       this.cellsHTML = html;
       
@@ -422,13 +426,19 @@
    }
    
    Game2048.prototype.corectOptions = function() {
-      if (this.size > 20) {
-         this.size = 20;
-      } else if (this.size < 2) {
-         this.size = 2;
-      }
+      this.propInInrerval('nTilesStart', 1, this.size * this.size);
+      this.propInInrerval('size', 2, 20);
+      this.propInInrerval('undoLen', 0, Infinity);
       
-      this.undoLen = (this.undoLen >= 0) ? this.undoLen : 0;
+      return this;
+   }
+   
+   Game2048.prototype.propInInrerval = function(prop, min, max) {
+      if (this[prop] > max) {
+         this[prop] = max;
+      } else if (this[prop] < min) {
+         this[prop] = min;
+      }
       
       return this;
    }
@@ -444,19 +454,14 @@
    
    Game2048.prototype.getMenu = function() {
       if (this.Menu) return this.Menu;
-      var self = this;
       
       this.Menu = new Menu();
       
       this.Menu.addItem('Continue');
-
-      this.Menu.addItem('Restart', function() {
-         self.restart();
-      });
-
+      this.Menu.addItem('Restart', this.restart.bind(this));
       this.Menu.addItem('Settings', function() {
-         self.getSettings().show();
-      });
+         this.getSettings().show();
+      }.bind(this));
       
       return this.Menu; 
    }
@@ -480,7 +485,7 @@
       self.Settings.addItem('Size: ' + self.size, function() {
          self.Prompt.onHide = function() {
             self.size = +self.Prompt.getVal();
-            self.consoleGame.size = self.size;
+            self.propInInrerval('size', 2, 20);
             self.restart();
             self.Settings.editItem('size', 'Size: ' + self.size);
          }
@@ -490,6 +495,7 @@
       self.Settings.addItem('Undo: ' + self.undoLen, function() {
          self.Prompt.onHide = function() {
             self.undoLen = +self.Prompt.getVal();
+            self.propInInrerval('undoLen', 0, Infinity);
             self.restart();
             self.Settings.editItem('undo', 'Undo: ' + self.undoLen);
          }
@@ -499,7 +505,7 @@
       self.Settings.addItem('Tiles start: ' + self.nTilesStart, function() {
          self.Prompt.onHide = function() {
             self.nTilesStart = +self.Prompt.getVal();
-            self.consoleGame.nConsoleTilesStart = self.nTilesStart
+            self.propInInrerval('nTilesStart', 1, self.size * self.size);
             self.restart();
             self.Settings.editItem('tileStart', 'Tile Start: ' + self.nTilesStart);
          }

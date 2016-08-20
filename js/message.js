@@ -18,7 +18,6 @@
       this.getHTMLElements();
       
       document.addEventListener('keyup', function(event) {
-         console.log(event.keyCode)
          if(event.keyCode === 27) { 
             this.simpleHide()
          }
@@ -40,6 +39,8 @@
          this.el.container.style.opacity = 1;
       }.bind(this), 50); 
       
+      this.visible = true;
+      
       return this;
    }
    
@@ -48,6 +49,8 @@
       this.el.container.style.opacity = 0;
       
       this.afterHide.apply(this.afterHide, arguments); 
+      
+      this.visible = false;
       
       return this;
    }
@@ -150,7 +153,7 @@
     *
     * @param {object} options. Настройки. Содержит свойства: 
     * {function} restart - функция, выполняемая при клике по restart
-    * {function} keep - Функция, выполняемая при клике по keep
+    * {function} continue - Функция, выполняемая при клике по continue
     */
    
    window.YouWin = function(options) {
@@ -173,8 +176,8 @@
       this.el.restart = this.el.container.
          getElementsByClassName('game__message-restart')[0];
       
-      this.el.keep = this.el.container.
-         getElementsByClassName('game__message-keep')[0];
+      this.el.continue = this.el.container.
+         getElementsByClassName('game__message-continue')[0];
    
       return this;
    }
@@ -187,8 +190,8 @@
          self.hide();
       })
       
-      this.el.keep.addEventListener('click', function() {
-         self.keep.apply(self.keep, arguments)
+      this.el.continue.addEventListener('click', function() {
+         self.continue.apply(self.continue, arguments)
          self.hide();
       })
       
@@ -199,7 +202,7 @@
       Message.prototype.createOptions.apply(this, arguments);
       
       this.restart = options.restart || this._defaultFun; 
-      this.keep = options.keep || this._defaultFun;
+      this.continue = options.continue || this._defaultFun;
       
       return this;
    };
@@ -264,6 +267,8 @@
       setTimeout(function() {
          this.el.container.style.display = 'none';
       }.bind(this), 500);
+      
+      this.visible = false;
       
       return this;
    }
@@ -350,6 +355,8 @@
          this.el.container.style.display = 'none';
       }.bind(this), 500);
       
+      this.visible = false;
+      
       return this;
    }
    
@@ -365,7 +372,7 @@
     * {function} onHide - выполняется при .hide()
     */
    window.Prompt = function(options) {//Функциональное наследование от Message
-      Message.apply(this, arguments);  
+      Message.apply(this, arguments);
       
       this.initEvents();
    }
@@ -382,12 +389,18 @@
       }.bind(this));
       
       this.el.input.addEventListener('keyup', function(event) {
-         if (event.keyCode === 13) {
-            this.hide();
+         if (event.keyCode === 13 && this.visible) {
+            this.el.input.blur();
          }
+         
+         this.clearNotNumber();
       }.bind(this))
       
       return this;
+   }
+   
+   Prompt.prototype.clearNotNumber = function() {
+      this.el.input.value = this.el.input.value.replace(/\D/g, ''); 
    }
    
    Prompt.prototype.getHTMLElements = function() {
@@ -415,6 +428,8 @@
       setTimeout(function() {
          this.el.container.style.display = 'none';
       }.bind(this), 500);
+      
+      this.visible = false;
       
       this.onHide(this);
       

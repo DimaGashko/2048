@@ -5,8 +5,6 @@
  *
  * @param {object} options. Настройки игры. Содержит свойства: 
  * {Game2048} Game - объект визуальной части игры
- * {number} nConsoleTilesStart - начальное количество блоков
- * {number} size - размер игрогого поля
  */
 
 (function() {
@@ -34,7 +32,7 @@
    }
    
    ConsoleGame2048.prototype.moveRight = function() {
-      return this._move('x', this.size);
+      return this._move('x', this.Game.size);
    }
    
    ConsoleGame2048.prototype.moveLeft = function() {
@@ -46,7 +44,7 @@
    }
    
    ConsoleGame2048.prototype.moveBottom = function() {
-      return this._move('y', this.size);
+      return this._move('y', this.Game.size);
    }
    
    ConsoleGame2048.prototype._move = function(axis, startValue) {
@@ -59,7 +57,7 @@
       var axisStart;
       var ranks = [];
       
-      for (var i = 0; i < this.size; i++) {
+      for (var i = 0; i < this.Game.size; i++) {
          ranks[i] = [];
       }
       
@@ -72,7 +70,7 @@
             return a[axis] - b[axis];
          });
          
-         if (startValue === this.size) {
+         if (startValue === this.Game.size) {
             ranks[i].reverse();
          }
          
@@ -137,7 +135,7 @@
    }
    
    ConsoleGame2048.prototype.checkGameOver = function() {
-      if (this.allConsoleTiles.length < this.size * this.size) {
+      if (this.allConsoleTiles.length < this.Game.size * this.Game.size) {
          return false;
       }
       
@@ -154,7 +152,7 @@
    }   
    
    ConsoleGame2048.prototype.createTilesStart = function() {
-      for (var i = 0; i < this.nConsoleTilesStart; i++) {
+      for (var i = 0; i < this.Game.nTilesStart; i++) {
          this.createOneConsoleTile();
       }
       
@@ -203,8 +201,8 @@
    ConsoleGame2048.prototype.getFreeCoordinates = function() {
       var free = [], notFree = this.getNotFreeCoordinates();
       
-      for (var i = 1; i <= this.size; i++) {
-         for(var j = 1; j <= this.size; j++) {
+      for (var i = 1; i <= this.Game.size; i++) {
+         for(var j = 1; j <= this.Game.size; j++) {
             var coordinat = i + '|' + j;
             if (!notFree[coordinat]) free.push(coordinat);
          }
@@ -264,24 +262,10 @@
    }
    
    ConsoleGame2048.prototype.createBaseOptions = function(options) {
-      this.nConsoleTilesStart = options.nConsoleTilesStart || 2,
-      this.size = options.size;
-      this.undoLen = options.undoLen;
       this.Game = options.Game;
-      this.corectOptions();
       this.random = new Random();
       
       return this;
    }
    
-   ConsoleGame2048.prototype.corectOptions = function() {
-      if (this.nConsoleTilesStart > this.size * this.size) {
-         this.nConsoleTilesStart = this.size * this.size;
-      }
-      
-      return this;
-   }
-   
 }());
-
-
