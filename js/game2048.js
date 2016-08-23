@@ -16,7 +16,6 @@
          return new Game2048(options); 
       }
       
-      
       this.getHTMLElements();
       this.createOptions(options);
       this.updateMetrics();
@@ -390,9 +389,11 @@
    }
    
    Game2048.prototype.createBaseOptions = function(options) {
-      this.nTilesStart = options.nTilesStart || 2,
-      this.size = options.size;
-      this.undoLen = options.undoLen;
+      this.setStorage = new Storage('game2048__settings-');
+      
+      this.addOption('nTilesStart', options.nTilesStart, 2);
+      this.addOption('size', options.size, 2);
+      this.addOption('undoLen', options.undoLen, 2);
       
       this.corectOptions();
       this.createConsoleGame();
@@ -425,6 +426,10 @@
       })
    }
    
+   Game2048.prototype.addOption = function(name, val, defaultVal) {
+      this[name] = +this.setStorage.get(name) || defaultVal || val;
+   }
+   
    Game2048.prototype.corectOptions = function() {
       this.propInInrerval('nTilesStart', 1, this.size * this.size);
       this.propInInrerval('size', 2, 20);
@@ -434,7 +439,9 @@
    }
    
    Game2048.prototype.propInInrerval = function(prop, min, max) {
-      if (this[prop] > max) {
+      if(typeof this[prop] !== 'number' || isNaN(this[prop])) {
+         this[prop] = min;
+      } else if (this[prop] > max) {
          this[prop] = max;
       } else if (this[prop] < min) {
          this[prop] = min;
@@ -485,7 +492,8 @@
       self.Settings.addItem('Size: ' + self.size, function() {
          self.Prompt.onHide = function() {
             self.size = +self.Prompt.getVal();
-            self.propInInrerval('size', 2, 20);
+            self.corectOptions();
+            self.setStorage.set('size', self.size);
             self.restart();
             self.Settings.editItem('size', 'Size: ' + self.size);
          }
@@ -495,7 +503,8 @@
       self.Settings.addItem('Undo: ' + self.undoLen, function() {
          self.Prompt.onHide = function() {
             self.undoLen = +self.Prompt.getVal();
-            self.propInInrerval('undoLen', 0, Infinity);
+            self.corectOptions();
+            self.setStorage.set('undoLen', self.undoLen);
             self.restart();
             self.Settings.editItem('undo', 'Undo: ' + self.undoLen);
          }
@@ -505,7 +514,8 @@
       self.Settings.addItem('Tiles start: ' + self.nTilesStart, function() {
          self.Prompt.onHide = function() {
             self.nTilesStart = +self.Prompt.getVal();
-            self.propInInrerval('nTilesStart', 1, self.size * self.size);
+            self.corectOptions();
+            self.setStorage.set('nTilesStart', self.nTilesStart);
             self.restart();
             self.Settings.editItem('tileStart', 'Tile Start: ' + self.nTilesStart);
          }

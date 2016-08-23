@@ -125,6 +125,26 @@
    }
    
    /** 
+    * Конструктор Storage - управление localStorage
+    *
+    * @param {string} prefix - приставка для свойств
+    */
+    
+   window.Storage = function(prefix) {
+      this.prefix = prefix || '';
+   }
+
+   Storage.prototype.set = function(key, val) {
+      localStorage[this.prefix + (key || '')] = val;
+      
+      return this;
+   }
+   
+   Storage.prototype.get = function(key) {
+      return localStorage[this.prefix + (key || '')];
+   }
+   
+   /** 
     * Конструктор Score
     *
     * @param {object} options - настройки. Содержит свойства:
@@ -207,11 +227,11 @@
    }
    
    BestScore.prototype.create = function() {
-      if (localStorage[this.PROP_STORAGE] === undefined) {
-         localStorage[this.PROP_STORAGE] = 0;
+      if (this.Storage.get('') === undefined) {
+         this.Storage.set('', 0);
       }
       
-      this.editVal(localStorage[this.PROP_STORAGE]);
+      this.editVal(this.Storage.get(''));
       
       return this;
    }
@@ -234,15 +254,15 @@
    }
    
    BestScore.prototype.save = function() {
-      if (+localStorage[this.PROP_STORAGE] < this.getVal()) {
-         localStorage[this.PROP_STORAGE] = this.getVal();
+      if (+this.Storage.get('') < this.getVal()) {
+         this.Storage.set('', this.getVal());
       }
      
       return this;
    }
    
-   BestScore.prototype.PROP_STORAGE = 'game2048__bestscore';
-
+   BestScore.prototype.Storage = new Storage('game2048__bestscore');
+   
    /** 
     * Конструктор рандомных чисел
     */
