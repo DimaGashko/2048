@@ -240,11 +240,7 @@
    }
    
    ConsoleGame2048.prototype.addTilesUndo = function() {
-      var jsonTiles = JSON.stringify(this.allConsoleTiles);
-      this.tilesUndo.push(jsonTiles);
-      this.Storage.set('', JSON.stringify(this.tilesUndo));
-      
-      return this;
+      this.Storage.set('', JSON.stringify(this.tilesUndo)); // - - - ! ! ! - - - 
    }
    
    ConsoleGame2048.prototype.restart = function() {
@@ -255,9 +251,8 @@
    }
    
    ConsoleGame2048.prototype.undo = function() {
-      var lastTiles = this.tilesUndo[this.tilesUndo.length-2];
+      var lastTiles = this.Game.previousStep.consoleTiles;
       this.allConsoleTiles = JSON.parse(lastTiles);
-      this.tilesUndo.splice(-1, 1);
       
       return this;
    }
@@ -282,7 +277,7 @@
    
    ConsoleGame2048.prototype.createBaseOptions = function(options) {
       this.Game = options.Game;
-      this.Storage = new Storage('consoleGame2048__tiles8');
+      this.Storage = new Storage('consoleGame2048__tiles9');
       this.random = new Random();
       
       return this;

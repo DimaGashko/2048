@@ -116,11 +116,7 @@
       this.metrics.widthCell + 'px; height: ' + 
       this.metrics.widthCell + 'px; border-width: ' + 
       this.metrics.cellBorder + 'px"></div>';
-   }
-   
-   Game2048.prototype.corectTextElUndo = function() {
-      this.el.undo.innerText = this.undoText + ' (' + this.restUndo + ')';
-   }  
+   } 
    
    Game2048.prototype.initEvents = function() {
       var self = this;
@@ -188,13 +184,63 @@
       
       this.updateNewTiles();
       
-      if (this.restUndo) {
-         this.addUndo();
-      }
+      this.rememberStep();
       
       if (this.consoleGame.checkGameOver()){
          this.gameOver();
       }
+   }
+   
+   Game2048.prototype.rememberStep = function() {
+      this.pastSteps.addStep({
+         score: this.Score.getVal(),
+         restUndo: this.restUndo,
+         consoleTiles: this.consoleGame.allConsoleTiles,
+      });
+   }
+   
+   Game2048.prototype.undo = function() {
+      if (this.checkUndo() && this.restUndo) {
+         this.previousStep = this.pastSteps.getPrevStep();
+         this.pastSteps.delLastStep();
+      console.log('undo')
+         this.restUndo--;
+         this.corectTextElUndo();
+         this.restScore();
+         this.consoleGame.undo();
+         this.clearTiles();
+         this.updateTiles();
+      } 
+      
+      return this;
+   }
+   
+   Game2048.prototype.restart = function() {
+      this.createOtherOptions();
+      this.clearTiles();
+      this.consoleGame.restart();
+      this.updateMetrics();
+      this.create();
+      
+      return this;
+   }
+   
+   Game2048.prototype.corectTextElUndo = function() {
+      this.el.undo.innerText = this.undoText + ' (' + this.restUndo + ')';
+   } 
+   
+   Game2048.prototype.checkUndo = function() {
+      return this.pastSteps.steps.length >= 2 && 
+         !this.gameLosing;
+   }
+   
+   Game2048.prototype.restScore = function() {
+      this.Score.edit(this.previousStep.score);
+   }
+   
+   Game2048.prototype.clearTiles = function() {
+      this.el.border.innerHTML = this.cellsHTML;
+      this.allTiles = {};
    }
    
    Game2048.prototype.checkCombo = function(tile) {
@@ -232,53 +278,6 @@
    Game2048.prototype.gameWin = function() {      
       this.gamePaused = true;
       this.speak.youWin.show();
-   }
-   
-   
-   Game2048.prototype.addUndo = function() {
-      this.consoleGame.addTilesUndo();
-      this.lastScores.push(this.Score.getVal());
-      
-      return this;
-   }
-   
-   Game2048.prototype.undo = function() {
-      if (this.checkUndo() && this.restUndo) {
-         this.restUndo--;
-         this.corectTextElUndo();
-         this.restScore();
-         this.consoleGame.undo();
-         this.clearTiles();
-         this.updateTiles();
-      } 
-      
-      return this;
-   }
-   
-   Game2048.prototype.restart = function() {
-      this.createOtherOptions();
-      this.clearTiles();
-      this.consoleGame.restart();
-      this.updateMetrics();
-      this.create();
-      
-      return this;
-   }
-   
-   Game2048.prototype.checkUndo = function() {
-      return this.consoleGame.tilesUndo.length >= 2 && 
-         !this.gameLosing;
-   }
-   
-   Game2048.prototype.restScore = function() {
-      var lastText = this.lastScores[this.lastScores.length - 2];
-      this.Score.edit(lastText);
-      this.lastScores.splice(-1, 1);
-   }
-   
-   Game2048.prototype.clearTiles = function() {
-      this.el.border.innerHTML = this.cellsHTML;
-      this.allTiles = {};
    }
    
    Game2048.prototype.setTileSpeed = function() {
@@ -381,6 +380,7 @@
       this.createConsoleGame();
       
       this.speak = new Speak(this);
+      this.pastSteps = new PastSteps(this);
       
       return this;
    }
@@ -388,7 +388,6 @@
    Game2048.prototype.createOtherOptions = function() {
       this.moving = true;
       this.restUndo = this.undoLen;
-      this.lastScores = [];
       this.allTiles = {};
       this.gameLosing = false; 
       this.won = false;
@@ -446,13 +445,6 @@
          size: this.size, 
          undoLen: this.undoLen,
       })
-   }
-   
-   Game2048.prototype.createPrompt = function() {
-      if (this.Prompt) return this.Prompt;
-      this.Prompt = new Prompt({});
-      
-      return this.Prompt;
    }
    
    Game2048.prototype.keyDirection = {
