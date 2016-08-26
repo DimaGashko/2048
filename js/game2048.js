@@ -143,18 +143,12 @@
       
       //undo
       this.el.undo.addEventListener('click', function() {
-         if (self.restUndo) {
-            console.log('undo')
-            self.undo();
-         }      
-         else {
-            console.log('undo ended');
-         }          
+          self.undo();       
       });
       
       //show menu 
       this.el.set.addEventListener('click', function() {
-         self.getMenu().show();
+         self.speak.menu.show();
       });
       
       return self;
@@ -221,39 +215,23 @@
    }
    
    Game2048.prototype.combo_4096 = function() {
-      this.Combo.show('Monster');
+      this.speak.combo.show('Monster');
    }
    
    Game2048.prototype.combo_8096 = function() {
-      this.Combo.show('Kiborg');
+      this.speak.combo.show('Kiborg');
    }
    
-   Game2048.prototype.gameOver = function() {
-      if (!this.ClassGameOver) {
-         this.ClassGameOver = new GameOver({
-            restart: this.restart.bind(this),
-         })
-      }
-      
-      this.ClassGameOver.show();
+   Game2048.prototype.gameOver = function() {      
+      this.speak.gameOver.show();
       this.gameLosing = true;
       
       return this;
    }
    
-   Game2048.prototype.gameWin = function() {
-      if (!this.ClassYouWin) {
-         this.ClassYouWin = new YouWin({
-            restart: this.restart.bind(this),
-            afterHide: function() {
-               console.log('end')
-               this.gamePaused = false;
-            }.bind(this),
-         })
-      }
-      
+   Game2048.prototype.gameWin = function() {      
       this.gamePaused = true;
-      this.ClassYouWin.show();
+      this.speak.youWin.show();
    }
    
    
@@ -265,14 +243,14 @@
    }
    
    Game2048.prototype.undo = function() {
-      if (this.checkUndo()) {
+      if (this.checkUndo() && this.restUndo) {
          this.restUndo--;
          this.corectTextElUndo();
          this.restScore();
          this.consoleGame.undo();
          this.clearTiles();
          this.updateTiles();
-      }
+      } 
       
       return this;
    }
@@ -391,13 +369,18 @@
    Game2048.prototype.createBaseOptions = function(options) {
       this.setStorage = new Storage('game2048__settings-');
       
-      this.addOption('nTilesStart', options.nTilesStart, 2);
-      this.addOption('size', options.size, 2);
-      this.addOption('undoLen', options.undoLen, 2);
+      this.options = options;
+      
+      this.setStartOptions();
+      
+      this.editOption('nTilesStart', options.nTilesStart, 2);
+      this.editOption('size', options.size, 2);
+      this.editOption('undoLen', options.undoLen, 2);
       
       this.corectOptions();
       this.createConsoleGame();
-      this.Combo = new Combo({delay: 3000});
+      
+      this.speak = new Speak(this);
       
       return this;
    }
@@ -426,8 +409,14 @@
       })
    }
    
-   Game2048.prototype.addOption = function(name, val, defaultVal) {
-      this[name] = +this.setStorage.get(name) || defaultVal || val;
+   Game2048.prototype.setStartOptions = function() {
+      this.size = this.options.size;
+      this.undoLen = this.options.undoLen;
+      this.nTilesStart = this.options.nTilesStart;
+   }
+   
+   Game2048.prototype.editOption = function(name, val, defaultVal) {
+      this[name] = +this.setStorage.get(name) || defaultVal || this[name];
    }
    
    Game2048.prototype.corectOptions = function() {
@@ -457,76 +446,6 @@
          size: this.size, 
          undoLen: this.undoLen,
       })
-   }
-   
-   Game2048.prototype.getMenu = function() {
-      if (this.Menu) return this.Menu;
-      
-      this.Menu = new Menu();
-      
-      this.Menu.addItem('Continue');
-      this.Menu.addItem('Restart', this.restart.bind(this));
-      this.Menu.addItem('Settings', function() {
-         this.getSettings().show();
-      }.bind(this));
-      
-      return this.Menu; 
-   }
-
-   Game2048.prototype.getSettings = function() {      
-      if (this.Settings) return this.Settings;
-      
-      this.createPrompt();
-      this.createSettings();
-      
-      return this.Settings; 
-   }
-   
-   Game2048.prototype.createSettings = function() {
-      var self = this;
-      
-      self.Settings = new Menu({
-         containerClassName: 'game__setings',
-      });
-      
-      self.Settings.addItem('Size: ' + self.size, function() {
-         self.Prompt.onHide = function() {
-            self.size = +self.Prompt.getVal();
-            self.corectOptions();
-            self.setStorage.set('size', self.size);
-            self.restart();
-            self.Settings.editItem('size', 'Size: ' + self.size);
-         }
-         self.Prompt.show(self.size);
-      }, 'size');
-
-      self.Settings.addItem('Undo: ' + self.undoLen, function() {
-         self.Prompt.onHide = function() {
-            self.undoLen = +self.Prompt.getVal();
-            self.corectOptions();
-            self.setStorage.set('undoLen', self.undoLen);
-            self.restart();
-            self.Settings.editItem('undo', 'Undo: ' + self.undoLen);
-         }
-         self.Prompt.show(self.undoLen);
-      }, 'undo');
-      
-      self.Settings.addItem('Tiles start: ' + self.nTilesStart, function() {
-         self.Prompt.onHide = function() {
-            self.nTilesStart = +self.Prompt.getVal();
-            self.corectOptions();
-            self.setStorage.set('nTilesStart', self.nTilesStart);
-            self.restart();
-            self.Settings.editItem('tileStart', 'Tile Start: ' + self.nTilesStart);
-         }
-         self.Prompt.show(self.nTilesStart);
-      }, 'tileStart');
-
-      self.Settings.addItem('Back', function() {
-         self.Menu.show();
-      });
-      
-      return this;
    }
    
    Game2048.prototype.createPrompt = function() {
