@@ -114,11 +114,11 @@
          function onHide(prop, prefixText) {
             Game[prop] = +speak.prompt.getVal();
             Game.corectOptions();
-            updateProp();
+            updateProp(prop, prefixText);
          }
          
          function updateProp(prop, prefixText) {
-            Game.setStorage.set(prop, Game[prop]);
+            Game.storage.settings.set(prop, Game[prop]);
             speak._settings.editItem(prop, prefixText + Game[prop]);
             Game.restart();
          }

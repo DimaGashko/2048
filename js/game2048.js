@@ -264,10 +264,6 @@
       this.speak.combo.show('Monster');
    }
    
-   Game2048.prototype.combo_8096 = function() {
-      this.speak.combo.show('Kiborg');
-   }
-   
    Game2048.prototype.gameOver = function() {      
       this.speak.gameOver.show();
       this.gameLosing = true;
@@ -366,7 +362,7 @@
    }
    
    Game2048.prototype.createBaseOptions = function(options) {
-      this.setStorage = new Storage('game2048__settings-');
+      this.storage = new GameStorage(this);
       
       this.options = options;
       
@@ -415,7 +411,8 @@
    }
    
    Game2048.prototype.editOption = function(name, val, defaultVal) {
-      this[name] = +this.setStorage.get(name) || defaultVal || this[name];
+      this[name] = +this.storage.settings.get(name) ||
+         defaultVal || this[name];
    }
    
    Game2048.prototype.corectOptions = function() {
