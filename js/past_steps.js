@@ -11,7 +11,7 @@
    }
    
    PastSteps.prototype.createOptions = function() {
-      this.steps = [];
+      this.steps = this.Game.storage.pastSteps.get('') || [];
    }
    
    //options = {consoleTiles, score, restUndo}
@@ -27,15 +27,20 @@
       return this;
    }
    
-   PastSteps.prototype.getPrevStep = function(prop) {
+   PastSteps.prototype.getPrevStep = function() {
       return this.steps[this.steps.length - 2];
    }
    
-   PastSteps.prototype.getLastStep = function(prop) {
+   PastSteps.prototype.getLastStep = function() {
       return this.steps[this.steps.length - 1];
    }
    
-   PastSteps.prototype.delLastStep = function(prop) {
+   PastSteps.prototype.getLastTiles = function() {
+      var tiles = this.getLastStep().consoleTiles;
+      return JSON.parse(tiles);
+   }
+   
+   PastSteps.prototype.delLastStep = function() {
       this.steps.splice(-1, 1);
    }
    

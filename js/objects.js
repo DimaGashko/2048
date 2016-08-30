@@ -135,13 +135,13 @@
    }
 
    Storage.prototype.set = function(key, val) {
-      localStorage[this.prefix + (key || '')] = val;
-      
+      localStorage[this.prefix + (key || '')] = JSON.stringify(val);
       return this;
    }
    
    Storage.prototype.get = function(key) {
-      return localStorage[this.prefix + (key || '')];
+      var val = localStorage[this.prefix + (key || '')];
+      return (val) ? JSON.parse(val) : val;
    }
    
    /** 
@@ -156,7 +156,7 @@
       this.create();
    }
    Score.prototype.create = function() {
-      this.element.innerText = '0';
+      this.element.innerText = this.start;
       
       return this;
    }
@@ -204,6 +204,7 @@
    Score.prototype.createOptions = function(options) {
       this.element = options.element;
       this.scorePlus = options.scorePlus;
+      this.start = options.start;
       
       return this;
    }

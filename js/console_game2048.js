@@ -20,21 +20,20 @@
    }
    
    ConsoleGame2048.prototype.init = function() {
-      if (this.Storage.get()) {
+      console.log(this.pastSteps.steps.length)
+      if (this.pastSteps.steps.length) {
          this.resumPastGame();
+         //this.createTilesStart();
       } else {
          this.createTilesStart();
       }   
    }
    
    ConsoleGame2048.prototype.resumPastGame = function() {
-      var lastTilesUndo = JSON.parse(this.Storage.get())
+      var lastStep = this.pastSteps.getLastStep();
+      var tiles = lastStep.consoleTiles;
       
-      if(lastTilesUndo) {
-         this.tilesUndo = lastTilesUndo;
-         this.allConsoleTiles = 
-            JSON.parse(lastTilesUndo[lastTilesUndo.length - 1]);
-      } 
+      this.allConsoleTiles = this.pastSteps.getLastTiles();
    }
    
    ConsoleGame2048.prototype.moveDirection = function(direction) {
@@ -239,10 +238,6 @@
       return notFree;
    }
    
-   ConsoleGame2048.prototype.addTilesUndo = function() {
-      this.Storage.set('', JSON.stringify(this.tilesUndo)); // - - - ! ! ! - - - 
-   }
-   
    ConsoleGame2048.prototype.restart = function() {
       this.createOtherOptions();
       this.createTilesStart();
@@ -277,8 +272,9 @@
    
    ConsoleGame2048.prototype.createBaseOptions = function(options) {
       this.Game = options.Game;
-      this.Storage = new Storage('consoleGame2048__tiles9');
       this.random = new Random();
+      
+      this.pastSteps = this.Game.pastSteps;
       
       return this;
    }

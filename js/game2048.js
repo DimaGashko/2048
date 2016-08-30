@@ -18,7 +18,6 @@
       
       this.getHTMLElements();
       this.createOptions(options);
-      this.updateMetrics();
       this.addOptions();
       this.create();
       this.initEvents();
@@ -35,50 +34,7 @@
       this.el.restart = g.getElementsByClassName('game__reastart')[0];
       this.el.undo = g.getElementsByClassName('game__undo')[0];
       this.el.border = g.getElementsByClassName('game__border')[0];
-   }
-   
-   Game2048.prototype.updateMetrics = function() {
-      var m = Game2048.prototype.metrics = {};
-      
-      m.border = this.el.border.clientWidth;
-      m.cellBorder = this.getCellBorder();
-      m.widthCell = this.getWidthCell();
-      m.tileSize = this.getTileSize();
-      m.oneCoordinatInPx = this.getOneCoordinatInPx();
-      m.fontSize = this.getFontSize();
-      
-      return this;
-   }
-   
-   Game2048.prototype.getTileSize = function() {
-      return this.metrics.widthCell + 
-         this.metrics.cellBorder * 2;
-   }
-   
-   Game2048.prototype.getWidthCell = function() {
-      return this.metrics.border / this.size - 
-         this.metrics.cellBorder * 2;
-   }
-   
-   Game2048.prototype.getFontSize = function() {
-      //Шрифт равер 38,5% от размеров плитки
-      return this.metrics.tileSize * 0.385;
-   }
-   
-   Game2048.prototype.getCellBorder = function() {
-      if (this.size < 4) {
-         return 3;
-      } else if (this.size < 8) {
-         return 2;
-      } else {
-         return 1;
-      }
-   }
-   
-   Game2048.prototype.getOneCoordinatInPx = function() {
-      return (this.metrics.widthCell + 
-         this.metrics.cellBorder * 2);
-   }
+   }   
    
    Game2048.prototype.create = function() {
       this.corectTextElUndo();
@@ -112,10 +68,10 @@
    }
    
    Game2048.prototype.getCellHTML = function() {
-   return '<div class="game__cell" style="width: ' +
-      this.metrics.widthCell + 'px; height: ' + 
-      this.metrics.widthCell + 'px; border-width: ' + 
-      this.metrics.cellBorder + 'px"></div>';
+      return '<div class="game__cell" style="width: ' +
+         this.metrics.widthCell + 'px; height: ' + 
+         this.metrics.widthCell + 'px; border-width: ' + 
+         this.metrics.cellBorder + 'px"></div>';
    } 
    
    Game2048.prototype.initEvents = function() {
@@ -197,13 +153,15 @@
          restUndo: this.restUndo,
          consoleTiles: this.consoleGame.allConsoleTiles,
       });
+      
+      this.storage.pastSteps.set('', this.pastSteps.steps);
    }
    
    Game2048.prototype.undo = function() {
       if (this.checkUndo() && this.restUndo) {
          this.previousStep = this.pastSteps.getPrevStep();
          this.pastSteps.delLastStep();
-      console.log('undo')
+         
          this.restUndo--;
          this.corectTextElUndo();
          this.restScore();
@@ -219,7 +177,8 @@
       this.createOtherOptions();
       this.clearTiles();
       this.consoleGame.restart();
-      this.updateMetrics();
+      this.Metrics.updateMetrics();
+      console.log(this.Metrics === this.Metrics)
       this.create();
       
       return this;
@@ -363,20 +322,25 @@
    
    Game2048.prototype.createBaseOptions = function(options) {
       this.storage = new GameStorage(this);
-      
+      this.pastSteps = new PastSteps(this);
+
       this.options = options;
       
       this.setStartOptions();
       
-      this.editOption('nTilesStart', options.nTilesStart, 2);
-      this.editOption('size', options.size, 2);
-      this.editOption('undoLen', options.undoLen, 2);
+      this.editOption('nTilesStart', options.nTilesStart);
+      this.editOption('size', options.size);
+      this.editOption('undoLen', options.undoLen);
+      
+      this.restUndo = (this.pastSteps.getLastStep()) ?
+         this.pastSteps.getLastStep().restUndo : this.undoLen;
       
       this.corectOptions();
       this.createConsoleGame();
       
       this.speak = new Speak(this);
-      this.pastSteps = new PastSteps(this);
+      this.Metrics = new Metrics(this);
+      this.metrics = this.Metrics.metrics;
       
       return this;
    }
@@ -388,13 +352,14 @@
       this.gameLosing = false; 
       this.won = false;
       this.gamePaused = false;
-      this.createOtherConstructors();
+      this.createScorsConstructors();
       
       return this;
    }
    
-   Game2048.prototype.createOtherConstructors = function () {
+   Game2048.prototype.createScorsConstructors = function () {
       this.Score = new Score({
+         start: 0,
          element: this.el.score,
          scorePlus: this.el.scorePlus,
       });
@@ -410,9 +375,9 @@
       this.nTilesStart = this.options.nTilesStart;
    }
    
-   Game2048.prototype.editOption = function(name, val, defaultVal) {
+   Game2048.prototype.editOption = function(name, val) {
       this[name] = +this.storage.settings.get(name) ||
-         defaultVal || this[name];
+         this.options[name];
    }
    
    Game2048.prototype.corectOptions = function() {
