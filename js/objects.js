@@ -154,15 +154,19 @@
    window.Score = function(options) {
       this.createOptions(options);
       this.create();
+      
+      if(this.start) {
+         this.add(this.start);
+      }
    }
    Score.prototype.create = function() {
-      this.element.innerText = this.start;
+      this.element.innerText = 0;
       
       return this;
    }
    
    Score.prototype.add = function(val) {
-      this.element.innerText = +this.element.innerText + val;
+      this.element.innerText = +this.element.innerText + +val;
       this.animateAdd(val);
       
       return this
