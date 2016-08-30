@@ -20,11 +20,15 @@
          this.steps.push({
             consoleTiles: JSON.stringify(options.consoleTiles),
             score: options.score,
-            restUndo: options.lastUndo,
+            restUndo: options.restUndo,
          });
       }   
       
       return this;
+   }
+   
+   PastSteps.prototype.restart = function() {
+      this.steps = [];
    }
    
    PastSteps.prototype.getPrevStep = function() {

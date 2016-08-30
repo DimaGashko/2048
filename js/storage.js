@@ -6,7 +6,11 @@
       this.pastSteps = new Storage(this.prefix + 'pastSteps');
    }
    
-   
+   GameStorage.prototype.clearPastSteps = function() {
+      this.pastSteps.set('consoleTiles', null);
+      this.pastSteps.set('restUndo', null);
+      this.pastSteps.set('score', null);
+   }
    
    GameStorage.prototype.prefix = '1game2048__';
    

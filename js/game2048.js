@@ -153,6 +153,7 @@
          restUndo: this.restUndo,
          consoleTiles: this.consoleGame.allConsoleTiles,
       });
+      console.log(this.restUndo)
       
       this.storage.pastSteps.set('', this.pastSteps.steps);
    }
@@ -168,6 +169,7 @@
          this.consoleGame.undo();
          this.clearTiles();
          this.updateTiles();
+         this.rememberStep();
       } 
       
       return this;
@@ -178,7 +180,8 @@
       this.clearTiles();
       this.consoleGame.restart();
       this.Metrics.updateMetrics();
-      console.log(this.Metrics === this.Metrics)
+      this.pastSteps.restart();
+      this.storage.clearPastSteps();
       this.create();
       
       return this;
@@ -317,6 +320,11 @@
       this.createBaseOptions(options);
       this.createOtherOptions();
       
+      this.restUndo = (this.pastSteps.getLastStep()) ?
+         this.pastSteps.getLastStep().restUndo : this.undoLen;
+         
+         console.log(this.pastSteps.getLastStep().restUndo, this.restUndo)
+      
       return this;
    }
    
@@ -331,10 +339,7 @@
       this.editOption('nTilesStart', options.nTilesStart);
       this.editOption('size', options.size);
       this.editOption('undoLen', options.undoLen);
-      
-      this.restUndo = (this.pastSteps.getLastStep()) ?
-         this.pastSteps.getLastStep().restUndo : this.undoLen;
-      
+         
       this.corectOptions();
       this.createConsoleGame();
       
@@ -358,8 +363,11 @@
    }
    
    Game2048.prototype.createScorsConstructors = function () {
+      var start = (this.pastSteps.getLastStep()) ? 
+         this.pastSteps.getLastStep().score : 0;
+         
       this.Score = new Score({
-         start: 0,
+         start: start,
          element: this.el.score,
          scorePlus: this.el.scorePlus,
       });

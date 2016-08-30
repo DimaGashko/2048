@@ -20,10 +20,8 @@
    }
    
    ConsoleGame2048.prototype.init = function() {
-      console.log(this.pastSteps.steps.length)
       if (this.pastSteps.steps.length) {
          this.resumPastGame();
-         //this.createTilesStart();
       } else {
          this.createTilesStart();
       }   
@@ -91,6 +89,7 @@
             ranks[i].reverse();
          }
          
+         identical = true;
          for (var j = 0; j < ranks[i].length; j++) {
             axisStart = ranks[i][j][axis];
             if (ranks[i][j-1]) {
