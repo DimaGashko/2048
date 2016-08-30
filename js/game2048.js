@@ -322,8 +322,6 @@
       
       this.restUndo = (this.pastSteps.getLastStep()) ?
          this.pastSteps.getLastStep().restUndo : this.undoLen;
-         
-         console.log(this.pastSteps.getLastStep().restUndo, this.restUndo)
       
       return this;
    }
