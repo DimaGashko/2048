@@ -153,7 +153,6 @@
          restUndo: this.restUndo,
          consoleTiles: this.consoleGame.allConsoleTiles,
       });
-      console.log(this.restUndo)
       
       this.storage.pastSteps.set('', this.pastSteps.steps);
    }
@@ -161,6 +160,7 @@
    Game2048.prototype.undo = function() {
       if (this.checkUndo() && this.restUndo) {
          this.previousStep = this.pastSteps.getPrevStep();
+         this.pastSteps.delLastStep();
          this.pastSteps.delLastStep();
          
          this.restUndo--;
@@ -182,6 +182,7 @@
       this.Metrics.updateMetrics();
       this.pastSteps.restart();
       this.storage.clearPastSteps();
+      this.rememberStep();
       this.create();
       
       return this;
@@ -363,6 +364,8 @@
    Game2048.prototype.createScorsConstructors = function () {
       var start = (this.pastSteps.getLastStep()) ? 
          this.pastSteps.getLastStep().score : 0;
+      
+      if (this.Score) start = 0;
          
       this.Score = new Score({
          start: start,

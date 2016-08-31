@@ -45,7 +45,9 @@
    }
    
    PastSteps.prototype.delLastStep = function() {
+   console.log(this.steps.length)
       this.steps.splice(-1, 1);
+      console.log(this.steps.length)
    }
    
    window.PastSteps = PastSteps;

@@ -97,8 +97,8 @@
                speak.prompt.show(Game.undoLen);
             }, 'undoLen');
             
-            speak._settings.addItem('Tiles start: ' + Game.nTilesStart, function() {
-               speak.prompt.onHide = onHide.bind(null, 'nTilesStart', 'Tiles Start: ');
+            speak._settings.addItem('Tiles count: ' + Game.nTilesStart, function() {
+               speak.prompt.onHide = onHide.bind(null, 'nTilesStart', 'Tiles count: ');
                speak.prompt.show(Game.nTilesStart);
             }, 'nTilesStart');
             

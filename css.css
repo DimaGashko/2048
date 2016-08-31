@@ -345,8 +345,9 @@
 
 .game-menu-item {
    display: block;
-   padding-left: 50px;
-   padding-right: 50px;
+   padding-left: 40px;
+   padding-right: 40px;
+   overflow: hidden;
 }
 
 .game_prompt-input {

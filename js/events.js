@@ -11,7 +11,7 @@
    var swipe = document.createEvent('Event');
    swipe.initEvent('swipe', true, true);
 
-   var startX, startY, minDiferent = 65; 
+   var startX, startY, minDiferent = 35; 
    var diferentX, diferentY;
    
    
