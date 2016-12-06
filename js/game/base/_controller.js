@@ -15,6 +15,27 @@
    
    Controller.prototype.init = function() {
       this.viewInit();
+      this.initEvents()
+      
+      return this;
+   }
+   
+   Controller.prototype.initEvents = function() {
+      this.view.addEvent('move', function(direction) {
+         var s = this.model.data.statuses;
+            
+         if (!s.move && !s.paused) {
+            s.move = true;
+            
+            var tiles = this.model.getTiles();
+            this.model.move(direction);
+            this.view.updateTiles(tiles);
+            
+            s.move = false;
+         }
+            
+         
+      }.bind(this));
       
       return this;
    }

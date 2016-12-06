@@ -37,7 +37,7 @@
       return this;
    }
 
-   Tile.prototype.setStartStyle = function(options) {
+   Tile.prototype.setStartStyle = function() {
       this.el.style.width = 1 + 'px';
       this.el.style.height = 1 + 'px';
       this.el.style['font-size'] = 1 + 'px';
@@ -45,11 +45,26 @@
       
       this.el.style.left = this.left + this.size / 2 + 'px';
       this.el.style.top = this.top + this.size / 2 + 'px';
-      
+         
+      this.setTransition();
       return this;
    }
    
-   Tile.prototype.setEndStyle = function(options) {
+   Tile.prototype.setTransition = function() {
+      var tileSpeed = this.tileSpeed + 'ms';
+      
+      this.el.style[vendor + 'Transition'] = 'transform ' + tileSpeed
+         + ',left ' + tileSpeed
+         + ',top ' + tileSpeed
+         + ',width ' + tileSpeed
+         + ',height ' + tileSpeed
+         + ',line-height ' + tileSpeed
+         + ',font-size ' + tileSpeed; 
+
+      return this;
+   }
+   
+   Tile.prototype.setEndStyle = function() {
       this.el.style.width = this.size + 'px';
       this.el.style.height = this.size + 'px';
       this.el.style['line-height'] = this.size + 'px';
@@ -99,6 +114,7 @@
       this.n = options.n;
       this.size = options.size;
       this.fontSize = options.fontSize || 20;
+      this.tileSpeed = options.tileSpeed || 150;
       
       return this;
    }

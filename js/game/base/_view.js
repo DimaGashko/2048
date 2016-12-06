@@ -22,6 +22,20 @@
       return this;
    }
   
+   View.prototype.addEvent = function(type, handler) {
+      if (type === 'move') {
+         document.addEventListener('keyup', function(event) {
+            var direction = this.KEYS[event.keyCode];
+            if (direction) handler(direction);
+         }.bind(this));
+         
+      } else if (type === '---') {
+         
+         
+      }
+      
+      return this;
+   }
    View.prototype.updateTiles = function(tilesConfig) {
       for (var i = 0; i < tilesConfig.length; i++) {
          var config = tilesConfig[i];
@@ -39,6 +53,8 @@
             options.parent = this.el.border;
             options.size = this.metrics.widthCell;
             options.fontSize = this.metrics.fontSize;
+            options.tileSpeed = config.tileSpeed;
+            console.log(config)
             
             this.tiles[config.index] = new Game2048.Tile(options);
          }
@@ -90,6 +106,13 @@
       this.tiles = [];
       
       return this;
+   }
+   
+   View.prototype.KEYS = {
+      37: 'left',
+      38: 'top',
+      39: 'right',
+      40: 'bottom',
    }
 
    window.Game2048._View = View;

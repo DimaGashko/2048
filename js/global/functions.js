@@ -3,7 +3,6 @@
    
    /** 
     * Созает объект, который содержит свойства переданных обектов
-    * 
     *
     * @param {object} объекты. Передаются в параметры.
     */
@@ -29,7 +28,7 @@
       return arguments[0];
    }
 
-	window.extend = extend;
+   window.extend = extend;
 }());
 
 ;(function(){
@@ -76,4 +75,16 @@
    window.getRandomNumber = function(min, max) {
       return Math.round(Math.random() * (max - min)) + min; 
    }
+}());
+
+window.vendor = (function() {
+   var style = document.body.style;
+   var vendor = ["Moz", "Webkit", "Khtml", "O", "ms"];
+   
+   for (var i = 0; i < vendor.length; i++) {
+      if (typeof style[vendor[i] + 'Transition'] === "string") {
+         return vendor[i];
+      }
+   }
+   return null;
 }());

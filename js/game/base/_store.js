@@ -39,14 +39,15 @@
       try {
          var d = JSON.parse(localStorage[this.options.name]);
          
-         var checkData = true; 
+         var checkData = d.steps && d.set; 
          if (!checkData) {
-            throw new SyntaxError('Отсутствуют необходимые свойства');
+            throw new SyntaxError('Game2048.Store: Отсутствуют необходимые свойства');
          }
          
          this.data = d;
       } catch (error) {
          if (error.type === 'SyntaxError') {
+            console.log(error);
             this.data = extend({}, this.DEFAULT_DATA);
             this.save();
          }
@@ -84,6 +85,11 @@
       
       return {
          steps: [[]],
+         statuses: {
+            move: false,
+            paused: false,
+            change: true,
+         },
          set: {
             nTilesStart: o.nTilesStart,
             size: o.size,
@@ -97,7 +103,8 @@
       nTilesStart: 2,
       size: 4,
       undoLen: 5,
-      name: 'game2048',
+      tileSpeed: 150,
+      name: 'game2048-6',
    }
    
    window.Game2048._Store = Store;
