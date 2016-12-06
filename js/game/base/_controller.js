@@ -10,11 +10,20 @@
       this.model = model;
       this.view = view;
       
-      this._init();
+      this.init();
    }
    
-   Controller.prototype._init = function() {
-      this.view.init(this.model.data.set.size);
+   Controller.prototype.init = function() {
+      this.viewInit();
+      
+      return this;
+   }
+   
+   Controller.prototype.viewInit = function() {
+      var size = this.model.data.set.size;
+      var tiles = this.model.getTiles()
+      
+      this.view.init(size, tiles);
       
       return this;
    }

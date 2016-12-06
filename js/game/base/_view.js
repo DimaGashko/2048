@@ -10,24 +10,48 @@
       this.metrics = metrics;
       
       this._getHTMLElements();
+      this._createOptions();
    }
    
-   View.prototype.init = function(size) {      
+   View.prototype.init = function(size, tilesConfig) {      
       this.metrics.update(size, this.el.border);
-      this.create(size);
+      
+      this.createCells(size);
+      this.updateTiles(tilesConfig);
       
       return this;
    }
+  
+   View.prototype.updateTiles = function(tilesConfig) {
+      for (var i = 0; i < tilesConfig.length; i++) {
+         var config = tilesConfig[i];
+         
+         var options = {
+            left: this.getCoordinatInPx(config.x),
+            top: this.getCoordinatInPx(config.y),
+            n: config.n,
+         }
+         
+         if (config.index in this.tiles) {
+            this.tiles[config.index].update(options);
+            
+         } else {
+            options.parent = this.el.border;
+            options.size = this.metrics.widthCell;
+            options.fontSize = this.metrics.fontSize;
+            
+            this.tiles[config.index] = new Game2048.Tile(options);
+         }
+      }
+   }
    
-   View.prototype.create = function(size) {
-      this.createCells(size);
-      
-      return this;
+   View.prototype.getCoordinatInPx = function(coordinat) {
+      return (coordinat - 1) * this.metrics.oneCoordinatInPx +
+         this.metrics.cellBorder;
    }
    
    View.prototype.createCells = function(size) { 
       this.el.border.innerHTML = this.getCellsHTML(size);
-      
       return this;
    }
    
@@ -61,6 +85,12 @@
       this.el.undo = g.querySelector('.game__undo');
       this.el.border = g.querySelector('.game__border');
    }   
+   
+   View.prototype._createOptions = function() {
+      this.tiles = [];
+      
+      return this;
+   }
 
    window.Game2048._View = View;
 

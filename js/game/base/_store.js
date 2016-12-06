@@ -83,7 +83,7 @@
       var o = this.options;
       
       return {
-         steps: [],
+         steps: [[]],
          set: {
             nTilesStart: o.nTilesStart,
             size: o.size,
