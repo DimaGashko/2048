@@ -76,6 +76,7 @@
             left: this.getCoordinatInPx(now.x),
             top: this.getCoordinatInPx(now.y),
             fontSize: this.metrics.fontSize,
+            tileSpeed: now.tileSpeed,
             n: now.n,
          })
          

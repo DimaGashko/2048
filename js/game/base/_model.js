@@ -33,10 +33,7 @@
    
    Model.prototype.move = function(direction) { 
       this.addStep();
-      console.log(this.data.steps.length)
       var size = this.data.set.size;
-      
-      //var startTiles = JSON.stringify(this.getTiles());
       
       if (direction === 'left') {
          this._moveTiles('x', 1);
@@ -52,9 +49,6 @@
          
       } 
       
-      //var endTiles = JSON.stringify(this.getTiles());
-      //this.data.statuses.change = (startTiles === endTiles);
-      
       return this;
    }
    
@@ -64,6 +58,7 @@
       var tiles = this.getTiles();
       var minusPos = (startValue === 1) ? -1 : 1;
       var size = this.data.set.size;
+      var changeEdit = false;
       
       var ranks = [];
       
@@ -104,6 +99,16 @@
             } else {
                ranks[i][j][axis] = startValue;
                
+            }
+            
+            //Изменилось ли что-то
+            if (!changeEdit) {
+               if (axisStart !== ranks[i][j][axis]) {
+                  this.data.statuses.change = true;
+                  changeEdit = true;
+               } else {
+                  this.data.statuses.change = false;
+               }
             }
           
          }

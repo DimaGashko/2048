@@ -24,16 +24,17 @@
       this.view.addEvent('move', function(direction) {
          var store = this.model.store;
          var s = store.data.statuses;
-         if (s.move && s.paused) return;
          
+         if (s.move || s.paused) return;
+         
+         console.log('move', s.move)
          s.move = true;
          
          this.model.move(direction);
          this.view.updateTiles(this.model.getTiles());
                   
          setTimeout(function() {
-            this.moveAfter();
-            
+            if (s.change) this.moveAfter();
             s.move = false; 
          }.bind(this), store.options.tileSpeed);           
          
