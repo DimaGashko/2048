@@ -104,7 +104,7 @@
       size: 4,
       undoLen: 5,
       tileSpeed: 150,
-      name: 'game2048-6',
+      name: 'game2048-7',
    }
    
    window.Game2048._Store = Store;

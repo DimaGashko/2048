@@ -16,12 +16,27 @@
       this.create();
    }
    
+   Model.prototype.create = function() {
+      if (this.data.steps.length < 2) {
+         this.data.steps = [[]];
+         this.createTilesStart();
+      }
+   }
+   
+   Model.prototype.createTilesStart = function() {
+      for (var i = 0; i < this.data.set.nTilesStart; i++) {
+         this.addTile();
+      }
+      
+      return this;
+   }
+   
    Model.prototype.move = function(direction) { 
       this.addStep();
-   
+      console.log(this.data.steps.length)
       var size = this.data.set.size;
       
-      var startTiles = JSON.stringify(this.getTiles());
+      //var startTiles = JSON.stringify(this.getTiles());
       
       if (direction === 'left') {
          this._moveTiles('x', 1);
@@ -37,8 +52,8 @@
          
       } 
       
-      var endTiles = JSON.stringify(this.getTiles());
-      this.data.statuses.change = (startTiles === endTiles);
+      //var endTiles = JSON.stringify(this.getTiles());
+      //this.data.statuses.change = (startTiles === endTiles);
       
       return this;
    }
@@ -47,22 +62,21 @@
       this.identicalTiles = [];
       
       var tiles = this.getTiles();
-      var otherAxis = (axis === 'x') ? 'y' : 'x';
       var minusPos = (startValue === 1) ? -1 : 1;
       var size = this.data.set.size;
       
       var ranks = [];
       
+      for (var i = 0; i < size; i++) {
+         ranks[i] = [];
+      }
+      
+      var otherAxis = (axis === 'x') ? 'y' : 'x';
       for (var i = 0; i < tiles.length; i++) {
-         var index = tiles[i][otherAxis] - 1;
-         
-         ranks[index] = ranks[index] || [];
-         ranks[index].push(tiles[i]);
+         ranks[tiles[i][otherAxis] - 1].push(tiles[i]);
       }
       
       for (var i = 0; i < ranks.length; i++) {
-         if (!ranks[i]) return;
-         
          ranks[i].sort(function(a, b) {
             return a[axis] - b[axis];
          });
@@ -98,48 +112,72 @@
       return this;
    }
    
-   Model.prototype.addStep = function() {
-      var steps = this.data.steps;
+   Model.prototype.joinIdentical = function() {
+      var identical = this.identicalTiles;
+      this.onDeleted = []; this.onAdd = [];
       
-      var newStep = JSON.stringify(steps[steps.length - 1]);
-      steps.push(JSON.parse(newStep));
-   }
-   
-   Model.prototype.create = function() {
-      if (!this.data.steps.length < 2) {
-         this.data.steps = [[]];
-         this.createTilesStart();
-      }
-   }
-   
-   Model.prototype.createTilesStart = function() {
-      for (var i = 0; i < this.data.set.nTilesStart; i++) {
-         this.addTile();
+      for (var i = 0; i < identical.length; i++) {
+         var p = identical[i][1];
+         var newTile = this.addTile(p.x, p.y, p.n * 2);
+         newTile.merger = true;
+         
+         this.onAdd.push(newTile);
+         this.onDeleted.push(identical[i][0].index, p.index);
+         this.removeTiles(identical[i][0], p);
       }
       
       return this;
    }
    
+   Model.prototype.removeTiles = function() {
+      var tiles = this.getTiles();
+      
+      for (var i = 0; i < arguments.length; i++) {
+         
+         for (var j = 0; j < tiles.length; j++) {
+            if (arguments[i].index === tiles[j].index) {
+               tiles.splice(j, 1);
+               break;
+            }
+         }
+      }
+      
+      return this;
+   }
+   
+   Model.prototype.addStep = function() {
+      var d = this.data;
+      
+      var newStep = JSON.stringify(d.steps[d.steps.length - 1]);
+      d.steps.push(JSON.parse(newStep));
+      
+      d.steps = d.steps.slice(-d.set.undoLen);
+   }
+   
    /**
     * Добавляет новую плитку в this.tiles
     */
-   Model.prototype.addTile = function() {
-      var coordinates = this.getAvailableCoordinates();
+   Model.prototype.addTile = function(x, y, n) {
+      if (!x && !y) {
+         var coordinates = this.getAvailableCoordinates();
       
-      if (!coordinates.length) return false;
-      
-      var randomN = getRandomNumber(0, coordinates.length - 1);
-      var select = coordinates[randomN].split('|');
+         if (!coordinates.length) return false;
+         var randomN = getRandomNumber(0, coordinates.length - 1);
+         var select = coordinates[randomN].split('|');
+         x = +select[0];
+         y = +select[1];
+      }
       
       var tile = {
          index: ++this.maxIndex,
          tileSpeed: this.store.options.tileSpeed,
-         x: +select[0],
-         y: +select[1],
-         n: 2,
+         n: n || 2,
+         x: x,
+         y: y,
       }
       
       this.getTiles().push(tile);
+      return tile;
    }
    
    /**

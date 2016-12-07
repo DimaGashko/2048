@@ -22,22 +22,35 @@
    
    Controller.prototype.initEvents = function() {
       this.view.addEvent('move', function(direction) {
-         var s = this.model.data.statuses;
+         var store = this.model.store;
+         var s = store.data.statuses;
+         if (s.move && s.paused) return;
+         
+         s.move = true;
+         
+         this.model.move(direction);
+         this.view.updateTiles(this.model.getTiles());
+                  
+         setTimeout(function() {
+            this.moveAfter();
             
-         if (!s.move && !s.paused) {
-            s.move = true;
-            
-            var tiles = this.model.getTiles();
-            this.model.move(direction);
-            this.view.updateTiles(tiles);
-            
-            s.move = false;
-         }
-            
+            s.move = false; 
+         }.bind(this), store.options.tileSpeed);           
          
       }.bind(this));
       
       return this;
+   }
+   
+   Controller.prototype.moveAfter = function() {
+      var model = this.model;
+      
+      model.joinIdentical();
+      
+      var newTile = model.addTile();
+      if (newTile) model.onAdd.push(newTile);
+      
+      this.view.updateNewTiles(model.onDeleted, model.onAdd);
    }
    
    Controller.prototype.viewInit = function() {

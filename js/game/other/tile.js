@@ -21,7 +21,7 @@
       
       setTimeout(function() {
          this.setEndStyle();
-      }.bind(this), 10);
+      }.bind(this), 50);
       
       return this;
    }

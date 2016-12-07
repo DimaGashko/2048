@@ -54,11 +54,46 @@
             options.size = this.metrics.widthCell;
             options.fontSize = this.metrics.fontSize;
             options.tileSpeed = config.tileSpeed;
-            console.log(config)
             
             this.tiles[config.index] = new Game2048.Tile(options);
          }
       }
+   }
+   
+   View.prototype.updateNewTiles = function(onDeleted, onAdd) {
+      var scorePlus = 0;
+   
+      for (var i = 0; i < onDeleted.length; i++) {
+         this.removeTile(onDeleted[i]);
+      }
+      
+      for (var i = 0; i < onAdd.length; i++) {
+         var now = onAdd[i];
+         
+         this.tiles[now.index] = new Game2048.Tile({
+            parent: this.el.border,
+            size: this.metrics.widthCell,
+            left: this.getCoordinatInPx(now.x),
+            top: this.getCoordinatInPx(now.y),
+            fontSize: this.metrics.fontSize,
+            n: now.n,
+         })
+         
+         if (now.merger) scorePlus += now.n;
+      }
+      
+      //if (scorePlus) this.updateScore(scorePlus);
+      
+      return this;
+   }
+   
+   View.prototype.removeTile = function(index) {
+      if (this.tiles[index]) {
+         this.tiles[index].remove();
+         delete this.tiles[index];
+      }
+      
+      return this;
    }
    
    View.prototype.getCoordinatInPx = function(coordinat) {
