@@ -17,6 +17,8 @@
    }
    
    Model.prototype.create = function() {
+      this.data.statuses.move = false;
+      
       if (this.data.steps.length < 2) {
          this.data.steps = [[]];
          this.createTilesStart();
@@ -128,7 +130,7 @@
          
          this.onAdd.push(newTile);
          this.onDeleted.push(identical[i][0].index, p.index);
-         this.removeTiles(identical[i][0], p);
+         this.removeTiles();
       }
       
       return this;
@@ -136,14 +138,16 @@
    
    Model.prototype.removeTiles = function() {
       var tiles = this.getTiles();
+      var indexes = this.onDeleted;
       
-      for (var i = 0; i < arguments.length; i++) {
-         
+      for (var i = 0; i < indexes.length; i++) {
          for (var j = 0; j < tiles.length; j++) {
-            if (arguments[i].index === tiles[j].index) {
+            
+            if (indexes[i] === tiles[j].index) {
                tiles.splice(j, 1);
                break;
             }
+            
          }
       }
       
@@ -228,8 +232,22 @@
       return this.data.steps[this.data.steps.length - 1];
    }
    
+   Model.prototype.getViewConfig = function() {
+      var d = this.data;
+      
+      return {
+         size: d.set.size, 
+         tilesConfig: this.getTiles(), 
+         score: d.score, 
+         bestScore: d.bestScore,
+      }
+   }
+   
    Model.prototype.createOptions = function() {
       this.maxIndex = 0;
+      this.identicalTiles = [];
+      this.onDeleted = [];
+      this.onAdd = [];
    }   
    
    window.Game2048._Model = Model;

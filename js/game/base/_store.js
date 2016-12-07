@@ -90,6 +90,8 @@
             paused: false,
             change: true,
          },
+         score: 0,
+         bestScore: 0,
          set: {
             nTilesStart: o.nTilesStart,
             size: o.size,
@@ -104,7 +106,7 @@
       size: 4,
       undoLen: 5,
       tileSpeed: 150,
-      name: 'game2048-20',
+      name: 'game2048-38',
    }
    
    window.Game2048._Store = Store;

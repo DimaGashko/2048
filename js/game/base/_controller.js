@@ -14,8 +14,8 @@
    }
    
    Controller.prototype.init = function() {
-      this.viewInit();
-      this.initEvents()
+      this.view.init(this.model.getViewConfig());
+      this.initEvents();
       
       return this;
    }
@@ -26,8 +26,6 @@
          var s = store.data.statuses;
          
          if (s.move || s.paused) return;
-         
-         console.log('move', s.move)
          s.move = true;
          
          this.model.move(direction);
@@ -36,7 +34,7 @@
          setTimeout(function() {
             if (s.change) this.moveAfter();
             s.move = false; 
-         }.bind(this), store.options.tileSpeed);           
+         }.bind(this), store.options.tileSpeed + 10);           
          
       }.bind(this));
       
@@ -52,15 +50,9 @@
       if (newTile) model.onAdd.push(newTile);
       
       this.view.updateNewTiles(model.onDeleted, model.onAdd);
-   }
-   
-   Controller.prototype.viewInit = function() {
-      var size = this.model.data.set.size;
-      var tiles = this.model.getTiles()
       
-      this.view.init(size, tiles);
-      
-      return this;
+      this.model.data.score = this.view.score.n;
+      //this.model.data.bestScore = this.view.bestScore.n;
    }
 
    window.Game2048._Controller = Controller;

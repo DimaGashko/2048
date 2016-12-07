@@ -13,11 +13,18 @@
       this._createOptions();
    }
    
-   View.prototype.init = function(size, tilesConfig) {      
-      this.metrics.update(size, this.el.border);
+   //config = {size, tilesConfig, score, bestScore}
+   View.prototype.init = function(config) {      
+      this.metrics.update(config.size, this.el.border);
       
-      this.createCells(size);
-      this.updateTiles(tilesConfig);
+      this.createCells(config.size);
+      this.updateTiles(config.tilesConfig);
+      
+      this.score = new Game2048.Score({
+         start: config.score,
+         element: this.el.score,
+         scorePlus: this.el.scorePlus,
+      });
       
       return this;
    }
@@ -83,7 +90,14 @@
          if (now.merger) scorePlus += now.n;
       }
       
-      //if (scorePlus) this.updateScore(scorePlus);
+      if (scorePlus) this.updateScore(scorePlus);
+      
+      return this;
+   }
+   
+   View.prototype.updateScore = function(n) {
+      this.score.add(n);
+      //this.BestScore.add(this.Score.getVal());
       
       return this;
    }
