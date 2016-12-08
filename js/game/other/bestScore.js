@@ -9,51 +9,27 @@
     */  
 
    function BestScore(options) {
-      this.createOptions(options);
-      this.create();
-   }
-   
-   BestScore.prototype.createOptions = function(options) {
       this.element = options.element;
+      this.n = 0;
       
-      return this;
-   }
-   
-   BestScore.prototype.create = function() {      
-      this.editVal(this.Storage.get(''));
-      
-      return this;
+      this.add(options.start);
    }
    
    BestScore.prototype.add = function(val) {
-      if (val > this.getVal()) {
+      if (val > this.n) {
          this.editVal(val);
-         this.save();
       }
-   }
-   
-   BestScore.prototype.editVal = function(val) {
-      this.element.innerText = val;
       
       return this;
    }
    
-   BestScore.prototype.getVal = function() {
-      return +this.element.innerText;
-   }
-   
-   BestScore.prototype.save = function() {
-      if (+this.Storage.get('') < this.getVal()) {
-         this.Storage.set('', this.getVal());
-      }
-     
+   BestScore.prototype.editVal = function(val) {
+      this.n = +val;
+      this.element.innerText = this.n;
+      
       return this;
    }
    
-   BestScore.prototype.Storage = new Storage('game2048__bestscore');
-   
-   
-   
-   window.Game2048.Score = Score;
+   window.Game2048.BestScore = BestScore;
    
 }());

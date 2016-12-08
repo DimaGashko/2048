@@ -38,6 +38,10 @@
          
       }.bind(this));
       
+      this.view.addEvent('restart', function() {      
+         this.view.restart();
+      }.bind(this));
+      
       return this;
    }
    
@@ -52,7 +56,7 @@
       this.view.updateNewTiles(model.onDeleted, model.onAdd);
       
       this.model.data.score = this.view.score.n;
-      //this.model.data.bestScore = this.view.bestScore.n;
+      this.model.data.bestScore = this.view.bestScore.n;
    }
 
    window.Game2048._Controller = Controller;

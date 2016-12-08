@@ -48,13 +48,10 @@
    }
    
    Score.prototype.edit = function (val) {
-      this.element.innerText = val;
+      this.n = val;
+      this.element.innerText = this.n;
       
       return this;
-   }
-   
-   Score.prototype.getVal = function () {
-      return this.element.innerText;
    }
    
    Score.prototype.createOptions = function(options) {

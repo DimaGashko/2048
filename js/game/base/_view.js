@@ -26,6 +26,11 @@
          scorePlus: this.el.scorePlus,
       });
       
+      this.bestScore = new Game2048.BestScore({
+         start: config.bestScore,
+         element: this.el.best,
+      });
+      
       return this;
    }
   
@@ -36,13 +41,16 @@
             if (direction) handler(direction);
          }.bind(this));
          
-      } else if (type === '---') {
-         
+      } else if (type === 'restart') {
+         this.el.restart.addEventListener('click', function() {
+            handler();
+         }.bind(this));
          
       }
       
       return this;
    }
+   
    View.prototype.updateTiles = function(tilesConfig) {
       for (var i = 0; i < tilesConfig.length; i++) {
          var config = tilesConfig[i];
@@ -97,7 +105,7 @@
    
    View.prototype.updateScore = function(n) {
       this.score.add(n);
-      //this.BestScore.add(this.Score.getVal());
+      this.bestScore.add(this.score.n);
       
       return this;
    }
@@ -138,6 +146,12 @@
       
       return html;
    } 
+   
+   View.prototype.restart = function(size, tiles) {
+      this.el.border.innerHTML = '';
+      this.createCells(size);
+      this.updateTiles(tiles);
+   }
    
    View.prototype._getHTMLElements = function() {
       this.el = {} //this.el.* - html elements
