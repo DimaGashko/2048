@@ -147,12 +147,6 @@
       return html;
    } 
    
-   View.prototype.restart = function(size, tiles) {
-      this.el.border.innerHTML = '';
-      this.createCells(size);
-      this.updateTiles(tiles);
-   }
-   
    View.prototype._getHTMLElements = function() {
       this.el = {} //this.el.* - html elements
       

@@ -243,6 +243,17 @@
       }
    }
    
+   Model.prototype.restart = function() {
+      var d = this.data;
+      
+      d.steps = [[]];
+      d.score = 0;
+      d.statuses.move = false;
+     // d.set.undoLen = d.options.undoLen;
+      
+      this.createTilesStart();
+   }
+   
    Model.prototype.createOptions = function() {
       this.maxIndex = 0;
       this.identicalTiles = [];

@@ -38,8 +38,11 @@
          
       }.bind(this));
       
-      this.view.addEvent('restart', function() {      
-         this.view.restart();
+      this.view.addEvent('restart', function() { 
+         var model = this.model;
+      
+         model.restart();
+         this.view.init(model.getViewConfig());
       }.bind(this));
       
       return this;
